@@ -1,0 +1,95 @@
+<div class="relative bg-transparent shadow">
+    <div class="max-w-6xl mx-auto h-16 ml-3 md:ml-0 md:h-28 ">
+        <div class="h-full flex items-center justify-between">
+            <div class="logo h-full">
+                <a class="h-full" href="{{ shop.secure_url }}">
+                    <img class="h-full w-auto" src="{{ shop.brand.logo | image_url}} " width="" height="">
+                </a>
+            </div>
+            <div class="md:hidden">
+                <button data-mobile-menu-button class="text-white hover:text-gray-400 mr-4">
+                    {% render 'icon-menu' %}
+                </button>
+            </div>
+            <nav class="hidden md:flex text-white gap-4">
+                {% for link in linklists.main-menu.links %}
+                    {% if link.links != blank %}
+                        <div class="relative">
+                            <button  data-dropdown-button class="gap-0.5 flex items-end text-xl hover:cursor-pointer {% if link.active==true %}text-[#AB6443]{% endif %}">{{ link.title }} {% render 'icon-chevron-down' %}</button>
+                            <div data-dropdown-menu class="hidden absolute z-10 mt-5 transform px-2 w-screen max-w-60 sm:px-0 lg:ml-0 lg:left-1/2 lg:-translate-x-1/2 ">
+                                <div class="shadow-lg border border-black ring-black ring-opacity-5 overflow-hidden rounded-lg">
+                                    <div class="relative grid gap-6 bg-[#1A1C1D] px-5 py-6 sm:gap-8 sm:p-8">
+                                        {% for sublink in link.links %}
+                                            <a href="{{ sublink.url }}" class="-m-3 p-3 flex items-start rounded-lg hover:bg-[#2D3236]">
+                                                <div class="ml-4">
+                                                    <p class="text-base font-medium text-white">{{ sublink.title }}</p>
+                                                </div>
+                                            </a>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="">
+                            <a class="text-xl {% if link.active==true %}text-[#AB6443]{% endif %}" href="{{ link.url }}">{{ link.title }}</a>    
+                        </div>        
+                    {% endif %}
+                {% endfor %}
+            </nav>
+            <div class="hidden md:flex text-xl items-center gap-2">
+                <a href="{{ routes.cart_url }}" class="text-white inline-block">{% render 'icon-cart' %}</a>
+                {% if shop.customer_accounts_enabled %}
+                    <a href="{{ routes.account_login_url }}" class="text-white inline-block">Login</a>
+                    <a href="{{ routes.account_register_url }}" class="text-white inline-block">Register</a>            
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div data-mobile-menu class="hidden absolute z-10 top-0 inset-x-0 p-2 transform origin-top-left md:hidden"> 
+        <div class="shadow-lg rounded-lg ring-1 ring-black rind-opacit-5 bg-[#1A1C1D] w-full">
+            <div class="p-5 divide-y-2 divide-gray-50">
+                <div class="flex items-center justify-between pb-3">
+                    <div>
+                        <h1 class="text-lg text-gray-500">Menu</h1>
+                    </div>
+                    <div class="-mr-2">
+                        <button data-mobile-menu-close-button class="hover:text-gray-600 text-gray-400 text-2xl">
+                            {% render 'icon-close' %}
+                        </button>
+                    </div>
+                </div>
+                <div class="pt-3">
+                    <nav class="grid gap-y-7">
+                        {% for link in linklists.main-menu.links %}
+                            {% if link.links !=blank %}
+                                <div class="relative">
+                                    <button data-mobile-submenu-button class="text-base p-3 -m-3 flex rounded-md items-center justify-between w-full hover:bg-[#2D3236] text-gray-300">
+                                        {{ link.title }} {% render 'icon-chevron-down' %}
+                                    </button>
+                                    <div data-mobile-submenu-menu class ="hidden grid gap-y-7 py-3">
+                                        {% for sublink in link.links %}
+                                            <a href="{{ sublink.url }}" class="flex p-3 -m-3 ml-1 items-center rounded-md text-gray-300 hover:bg-[#2D3236]">{{ sublink.title }}</a>
+                                        {% endfor %}    
+                                    </div>
+                                </div>
+                            {% else %}
+                                <a href="{{ link.url }}" class="flex p-3 -m-3 items-center rounded-md text-gray-300  hover:bg-[#2D3236]">{{ link.title }}</a>
+                            {% endif %}
+                        {% endfor %}
+                    </nav>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% schema %}
+    {
+        "name":"Header",
+        "settings": [
+
+        ]
+    }
+{% endschema %}
