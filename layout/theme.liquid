@@ -12,7 +12,7 @@
     {{ 'application.css' | asset_url | stylesheet_tag }}
     {{ 'application.js' | asset_url | script_tag }}
   </head>
-  <body class="min-h-screen bg-gradient-to-br from-[#262A2D] via-[#1A1C1D] to-[#0C0D0E]">
+  <body class="min-h-screen bg-white">
     {% section 'header' %}
     <main role="main">
       {{ content_for_layout }}

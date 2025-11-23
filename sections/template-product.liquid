@@ -1,0 +1,261 @@
+<style>
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+</style>
+<div class="max-w-6xl mx-auto my-8">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+    <div class="product-medias h-[500px] slider relative w-sm m-auto">
+      <div class="flex list absolute top-0 left-0 w-full h-full overflow-hidden">
+        {% for media in product.media %}
+          <div class="item h-auto min-w-full">
+            {% render 'product-media', media: media %}
+          </div>
+        {% endfor %}
+      </div>
+      <div class="absolute top-1/2 buttons text-white flex w-full justify-between items-center">
+        <button id="prev" class="block bg-gray-300  rounded-full flex items-center justify-center p-1">
+          {% render 'icon-prev' %}
+        </button>
+        <button id="next" class="block bg-gray-300 rounded-full flex items-center justify-center p-1">
+          {% render 'icon-next' %}
+        </button>
+      </div>
+
+      <div class="absolute flex  justify-center left-1/2 -translate-x-1/2 translate-y-1 items-center top-full gap-2">
+        {% for media in product.media %}
+          <button
+            data-index="{{ forloop.index0 }}"
+            class="w-2 h-2 rounded-full z-30 transition duration-500 {% if forloop.first %}bg-[#292c2f]{% else %}bg-[#939498]{% endif %}"
+          ></button>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="product-info relative p-4 sm:p-0">
+      {% form 'product', product %}
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        <p class="absolute -rotate-90 right-0 top-2/12 translate-x-1/4 font-black m-0 p-0 text-4xl">
+          {{ product.category }}
+        </p>
+        <div class="basic-info border-b-2 pb-3 border-[#939498]">
+          <h2 class="text-3xl text-[#292c2f] font-bold">{{ product.title }}</h2>
+          <div class="flex gap-3 my-2">
+            <p class="{% if product.price != product.compare_at_price  %} {% if product.compare_at_price>0 %}line-through{% endif %}{% endif %} text-2xl text-[#292c2f] font-bold">
+              {{ product.price | money }}
+            </p>
+            {% if product.price != product.compare_at_price %}
+              <p class="text-2xl text-[#292c2f] font-bold">
+                {{ product.compare_at_price | money }}
+              </p>
+            {% endif %}
+          </div>
+          <p class="text-[#939498] my-3">{{ product.description }}</p>
+        </div>
+        <div class="my-3 border-b-2 border-[#939498]">
+          {% unless product.has_only_default_variant %}
+            <div data-url="{{ product.url }}" data-section="{{ section.id }}">
+              {% for option in product.options_with_values %}
+                <label class="block mb-1 text-[#292c2f] font-medium">{{ option.name }}</label>
+                <div class="flex flex-wrap gap-2 mb-4" data-option-index="{{ forloop.index0 }}">
+                  {% for value in option.values %}
+                    <button
+                      type="button"
+                      class="variant-btn px-4 py-1 rounded-sm border border-[#ECC689] text-[#292c2f] hover:bg-[#ECC689] transition"
+                      data-value="{{ value | escape }}"
+                    >
+                      {{ value }}
+                    </button>
+                  {% endfor %}
+                </div>
+                <input
+                  type="hidden"
+                  name="options[{{ option.name | escape }}]"
+                  id="Option-{{ section.id }}-{{ forloop.index0 }}"
+                >
+              {% endfor %}
+            </div>
+          {% endunless %}
+          <div class="my-3">
+            <label class="block mb-1 text-[#292c2f] font-medium">Quantity</label>
+            <div class="flex items-center">
+              <button type="button" class="btn-minus bg-[#ECC689] hover:bg-[#f9e2a9] rounded-full p-0.5">
+                {% render 'icon-minus' %}
+              </button>
+              <input
+                type="number"
+                name="quantity"
+                value="1"
+                min="1"
+                disabled
+                class="w-12 text-center border border-[#ECC689] mx-2 rounded-sm"
+              >
+              <button type="button" class="btn-plus bg-[#ECC689] hover:bg-[#f9e2a9] rounded-full p-0.5">
+                {% render 'icon-plus' %}
+              </button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <button
+            type="submit"
+            class="w-full bg-[#292c2f] text-white py-3 rounded-sm hover:bg-[#3c4043] transition font-medium"
+            {% unless product.selected_or_first_available_variant.available %}
+              disabled
+            {% endunless %}
+          >
+            {% if product.selected_or_first_available_variant.available == false %}
+              Sold Out
+            {% else %}
+              Add to Cart
+            {% endif %}
+          </button>
+          <a class="text-[#ECC689] flex items-end gap-0.5 mt-3" href="{{ routes.all_products_collection_url }}"
+            ><span>Continue Shopping</span>
+            <span class="flex items-end justify-center p-0">{% render 'icon-right-arrow' -%}</span>
+          </a>
+        </div>
+      {% endform %}
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const quantityInput = document.querySelector("input[name='quantity']");
+    const minusBtn = document.querySelector('.btn-minus');
+    const plusBtn = document.querySelector('.btn-plus');
+
+    minusBtn.addEventListener('click', () => {
+      let value = parseInt(quantityInput.value);
+      if (value > 1) quantityInput.value = value - 1;
+    });
+
+    plusBtn.addEventListener('click', () => {
+      let value = parseInt(quantityInput.value);
+      quantityInput.value = value + 1;
+    });
+  });
+  document.querySelectorAll('.flex[data-option-index]').forEach((group) => {
+    const optionIndex = group.dataset.optionIndex;
+    const hiddenInput = document.getElementById(`Option-{{ section.id }}-${optionIndex}`);
+    group.querySelectorAll('.variant-btn').forEach((btn, idx) => {
+      // Select first by default
+      if (idx === 0) {
+        btn.classList.add('bg-[#ECC689]');
+        hiddenInput.value = btn.dataset.value;
+      }
+    });
+
+    group.querySelectorAll('.variant-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        // Remove selection from all
+        group.querySelectorAll('.variant-btn').forEach((b) => b.classList.remove('bg-[#ECC689]'));
+
+        // Add selected styles
+        btn.classList.add('bg-[#ECC689]');
+
+        hiddenInput.value = btn.dataset.value;
+      });
+    });
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const items = document.querySelectorAll('.product-medias .item');
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
+    const dots = document.querySelectorAll('.product-medias button[data-index]');
+    const width = items[0].clientWidth;
+    console.log(width);
+    let current = 0;
+
+    function showSlide(index) {
+      items.forEach((item, i) => {
+        item.classList.remove('active');
+        if (i === index) item.classList.add('active');
+        item.style.transform = `translateX(-${width * index}px)`;
+      });
+
+      // Update dots
+      dots.forEach((dot, i) => {
+        if (i === index) {
+          dot.classList.add('bg-[#292c2f]');
+          dot.classList.remove('bg-[#939498]');
+          dot.classList.add('w-4');
+        } else {
+          dot.classList.add('bg-[#939498]');
+          dot.classList.remove('bg-[#292c2f]');
+          dot.classList.remove('w-4');
+        }
+      });
+    }
+
+    nextBtn.addEventListener('click', () => {
+      current = (current + 1) % items.length;
+      showSlide(current);
+    });
+
+    prevBtn.addEventListener('click', () => {
+      current = (current - 1 + items.length) % items.length;
+      showSlide(current);
+    });
+
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        current = parseInt(dot.dataset.index);
+        showSlide(current);
+      });
+    });
+
+    showSlide(current);
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Product",
+  "blocks": [
+    {
+      "type": "vendor",
+      "name": "Vendor",
+      "limit": 1
+    },
+    {
+      "type": "title",
+      "name": "Title",
+      "limit": 1
+    },
+    {
+      "type": "price",
+      "name": "Price",
+      "limit": 1
+    },
+    {
+      "type": "variant_selector",
+      "name": "Variant Selector",
+      "limit": 1
+    },
+    {
+      "type": "quantity",
+      "name": "Quantity",
+      "limit": 1
+    },
+    {
+      "type": "description",
+      "name": "Description",
+      "limit": 1
+    },
+    {
+      "type": "checkout_buttons",
+      "name": "Checkout Buttons",
+      "limit": 1
+    }
+  ]
+}
+{% endschema %}

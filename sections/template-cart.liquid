@@ -1,0 +1,48 @@
+{% if cart.item_count==0 %}
+    <div class="p-4">
+        <div class="max-w-6xl mx-auto flex flex-col my-10">
+            <div class="flex items-end justify-between my-5">
+                <h1 class="text-3xl">Your cart</h1>
+                <a href="{{ routes.all_products_collection_url }}" class="text-blue-600 hover:text-blue-800 underline">Continue shopping</a>
+            </div>
+        </div>
+        <div class="max-w-6xl flex flex-col my-10 mx-auto">
+            <form action="{{ routes.cart_url }}" method="POST" novalidate>
+                <table class="table-auto divide divide-gray-200 my-4 w-full">
+                    <tbody>
+                        {% for item in cart.items %}
+                            <tr class="table-row bg-gray-800 px-3 py-4">
+                                <td class="px-2 flex flex-col">
+                                    <a href="">
+                                        {% if item.image %}
+                                            <img src="{{ item.image | img_url}}" class="w-20 h-20 rounded-[50%] object-cover border" width=""height="">
+                                        {% else %}
+                                            {{ 'product-1'|placeholder_svg_tag:"w-20 h-20 object-cover border" }}
+                                        {% endif %}
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="{{ item.url }}" class="my-1">{{ item.product.title | truncatewords:5}}</a>
+                                    <span class="text-sm text-gray-500 my-1">{{ item.variant.title }}</span>
+                                    <a href="/cart/change?line=1&"></a>
+                                </td>
+                                <td></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+{% else %}
+    <div class="max-w-6xl mx-auto h-60 my-4 flex items-center justify-center">
+        <div class="text-center">
+            <h1 class="text-3xl m-3 text-white">Your cart is Empty</h1>
+            <div class="my-4 py-4">
+                <a  href="{{ routes.all_products_collection_url }}" class="border border-gray-600 text-black bg-[#d2aa72] hover:bg-[#ae6944] px-8 py-3">
+                    Continue Shopping
+                </a>
+            </div>
+        </div>
+    </div>
+{% endif %}
