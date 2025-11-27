@@ -1,0 +1,49 @@
+{% paginate collection.products by 12 %}
+  <div class="max-w-6xl mx-auto">
+    <h1 class="text-3xl text-center font-[playfair]">{{ collection.title }}</h1>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+      {% for product in collection.products %}
+        <div class="w-full max-w-10/12 mx-auto md:max-w-full">
+          <div class="relative bg-white shadow-xl rounded-lg overflow-hidden">
+            {% if product.compare_at_price < product.price %}
+              {% assign discount = product.compare_at_price | minus: product.price %}
+              {% assign percent = discount | times: 100 | divided_by: product.compare_at_price %}
+              <span class="block absolute z-10 px-4 text-center font-medium translate-y-1/2 bg-[#ECC689] -rotate-90 top-0 right-0">
+                {{- percent | round }}%</span
+              >
+            {% endif %}
+            <a href="{{ product.url }}">
+              <div class="w-full h-60 sm:h-80">
+                {% if product.featured_image %}
+                  <img
+                    class="block w-full h-full object-cover"
+                    width=""
+                    height=""
+                    src="{{ product.featured_image | img_url: 'medium' }}"
+                    alt="{{ product.featured_image.alt | escape }}"
+                  >
+                {% endif %}
+              </div>
+              <div class="px-3 py-2">
+                <span class="block font-bold text-[#ECC689] text-sm uppercase tracking-widest">
+                  {{- product.category -}}
+                </span>
+                <p class="text-xl truncate font-medium">{{ product.title }}</p>
+                <div class="flex gap-2 items-center">
+                  <p class="text-lg font-medium text-[#292c2f] {% if product.compare_at_price != product.price %} {% if product.compare_at_price>0 %} line-through{% endif %}{% endif %}">
+                    {{ product.price | money }}
+                  </p>
+                  <p class="text-xl text-[#ECC689]">
+                    {{ product.compare_at_price | money }}
+                  </p>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      {% else %}
+        <p>There are no products inside of this collection</p>
+      {% endfor %}
+    </div>
+  </div>
+{% endpaginate %}

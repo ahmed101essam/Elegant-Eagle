@@ -9,7 +9,7 @@
     -moz-appearance: textfield;
   }
 </style>
-<div class="max-w-6xl mx-auto my-8">
+<div class="max-w-6xl mx-auto m-0 md:my-8">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
     <div class="product-medias h-[500px] slider relative w-sm m-auto">
       <div class="flex list absolute top-0 left-0 w-full h-full overflow-hidden">
@@ -216,46 +216,47 @@
     showSlide(current);
   });
 </script>
-
-{% schema %}
-{
-  "name": "Product",
-  "blocks": [
-    {
-      "type": "vendor",
-      "name": "Vendor",
-      "limit": 1
-    },
-    {
-      "type": "title",
-      "name": "Title",
-      "limit": 1
-    },
-    {
-      "type": "price",
-      "name": "Price",
-      "limit": 1
-    },
-    {
-      "type": "variant_selector",
-      "name": "Variant Selector",
-      "limit": 1
-    },
-    {
-      "type": "quantity",
-      "name": "Quantity",
-      "limit": 1
-    },
-    {
-      "type": "description",
-      "name": "Description",
-      "limit": 1
-    },
-    {
-      "type": "checkout_buttons",
-      "name": "Checkout Buttons",
-      "limit": 1
-    }
-  ]
-}
-{% endschema %}
+{% comment %}
+  {% schema %}
+  {
+    "name": "Product",
+    "blocks": [
+      {
+        "type": "vendor",
+        "name": "Vendor",
+        "limit": 1
+      },
+      {
+        "type": "title",
+        "name": "Title",
+        "limit": 1
+      },
+      {
+        "type": "price",
+        "name": "Price",
+        "limit": 1
+      },
+      {
+        "type": "variant_selector",
+        "name": "Variant Selector",
+        "limit": 1
+      },
+      {
+        "type": "quantity",
+        "name": "Quantity",
+        "limit": 1
+      },
+      {
+        "type": "description",
+        "name": "Description",
+        "limit": 1
+      },
+      {
+        "type": "checkout_buttons",
+        "name": "Checkout Buttons",
+        "limit": 1
+      }
+    ]
+  }
+  {% endschema %}
+{% endcomment %}

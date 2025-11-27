@@ -1,0 +1,38 @@
+<footer class="min-h-60 bg-[#292c2f]">
+  <div class="h-4/5 border-b-2 border-b-[#939498] py-4 w-full px-4">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between flex-wrap">
+      {% for link in linklists.footer.links %}
+        {% if link.links != blank %}
+          <div class="flex flex-row sm:flex-col items-center md:items-start gap-2">
+            <h4 class="text-2xl text-white my-4 font-medium flex flex-row sm:flex-col ">
+              {{ link.title }}
+            </h4>
+            {% for sublink in link.links %}
+              <a class="text-[#ECC689] underline font-medium my-1 cursor-pointer hover:text-[#e6b76b]">
+                {{- sublink.title -}}
+              </a>
+            {% endfor %}
+          </div>
+        {% else %}
+
+        {% endif %}
+      {% endfor %}
+      <div class="flex flex-row sm:flex-col items-center md:items-start gap-2">
+        <h4 class="text-2xl text-white my-4 font-medium flex flex-row sm:flex-col">Social Media</h4>
+        <div>
+          <a class="text-[#ECC689]"><i class="fa-brands fa-facebook-f"></i></a>
+          <a class="text-[#ECC689]"><i class="fa-brands fa-instagram"></i></a>
+          <a class="text-[#ECC689]"><i class="fa-brands fa-x-twitter"></i></a>
+          <a class="text-[#ECC689]"><i class="fa-brands fa-tiktok"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="h-1/5">
+    <div class="max-w-6xl mx-auto flex justify-center items-center">
+      <p class="text-[#939498] py-2">
+        <i class="fa-regular fa-copyright"></i> Elegant Eagle Fashion Store. All right reserved.
+      </p>
+    </div>
+  </div>
+</footer>

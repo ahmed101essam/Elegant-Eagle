@@ -1,5 +1,13 @@
-<div class="homepage">
-  <img src="{{ 'weeklyhow-logo.png' | asset_img_url: 'large' }}" class="logo">
-  <h1>Welcome to Shopify Theme Development course!</h1>
-  <p>{% render 'homepage-text' %}</p>
+<div class="max-w-6xl mx-auto">
+  <div class="hero h-48 md:h-96 mt-12 p-2">
+    <div class="h-full border-double border-6 border-[#ECC689] p-6 flex flex-col gap-2 justify-end">
+      <h2 class="text-4xl font-[raleway] font-medium">Discover Timeless Elegance</h2>
+      <p class="text-xl">Luxury meets sophistication</p>
+      <a
+        class="block py-2 px-8 text-xl w-fit rounded-full text-white font-medium cursor-pointer bg-[#ECC689] hover:bg-[#F9E2A9]"
+        href="{{ routes.all_products_collection_url }}"
+        >Shop Collection</a
+      >
+    </div>
+  </div>
 </div>
