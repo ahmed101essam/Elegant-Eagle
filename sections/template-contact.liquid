@@ -1,12 +1,239 @@
-<div class="">
-  <div class="max-w-6xl mx-auto">
+<div class="py-12">
+  <div class="max-w-6xl mx-auto px-4">
+    <!-- Hero Section -->
     <div
-      class="h-48 md:h-96 mt-12 p-2"
+      class="h-48 md:h-96 p-2"
       style="{% if section.settings.background_image %}background-image: url('{{ section.settings.background_image | image_url: width: 1920 }}'); background-size: cover; background-position: center;{% endif %}"
     >
       <div
-        class="h-full border-double border-6 border-[#ECC689] p-2 md:p-6 flex flex-col gap-1 md:gap-2 justify-end"
-      ></div>
+        class="h-full border-double border-6 border-[#ECC689] p-2 md:p-6 flex flex-col gap-1 md:gap-2 justify-center"
+      >
+        <h2 class="text-[#ECC689] text-2xl md:text-4xl font-medium">{{ section.settings.heading }}</h2>
+        <p class="max-w-xl text-lg md:text-xl text-white">{{ section.settings.subheading }}</p>
+      </div>
+    </div>
+
+    <!-- Contact Section -->
+    <div class="flex flex-col md:flex-row gap-8 md:gap-12 mt-12">
+      <!-- Contact Information -->
+      <div class="flex-1">
+        <h3 class="text-2xl md:text-3xl text-[#ECC689] font-medium mb-6">{{ section.settings.info_heading }}</h3>
+
+        <div class="space-y-4">
+          {% if section.settings.phone != blank %}
+            <div class="flex items-start gap-4">
+              <i class="fa-solid fa-phone text-[#ECC689] text-xl mt-1"></i>
+              <div>
+                <p class="font-medium text-gray-800">Phone</p>
+                <a href="tel:{{ section.settings.phone }}" class="text-gray-600 hover:text-[#ECC689]">
+                  {{ section.settings.phone }}
+                </a>
+              </div>
+            </div>
+          {% endif %}
+
+          {% if section.settings.email != blank %}
+            <div class="flex items-start gap-4">
+              <i class="fa-solid fa-envelope text-[#ECC689] text-xl mt-1"></i>
+              <div>
+                <p class="font-medium text-gray-800">Email</p>
+                <a href="mailto:{{ section.settings.email }}" class="text-gray-600 hover:text-[#ECC689]">
+                  {{ section.settings.email }}
+                </a>
+              </div>
+            </div>
+          {% endif %}
+
+          {% if section.settings.address != blank %}
+            <div class="flex items-start gap-4">
+              <i class="fa-solid fa-location-dot text-[#ECC689] text-xl mt-1"></i>
+              <div>
+                <p class="font-medium text-gray-800">Address</p>
+                <p class="text-gray-600">{{ section.settings.address }}</p>
+              </div>
+            </div>
+          {% endif %}
+
+          {% if section.settings.hours != blank %}
+            <div class="flex items-start gap-4">
+              <i class="fa-solid fa-clock text-[#ECC689] text-xl mt-1"></i>
+              <div>
+                <p class="font-medium text-gray-800">Business Hours</p>
+                <p class="text-gray-600">{{ section.settings.hours }}</p>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Contact Form -->
+      <div class="flex-1">
+        <h3 class="text-2xl md:text-3xl text-[#ECC689] font-medium mb-6">{{ section.settings.form_heading }}</h3>
+
+        {% form 'contact' %}
+          {% if form.posted_successfully? %}
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+              {{ section.settings.success_message }}
+            </div>
+          {% endif %}
+
+          {% if form.errors %}
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+              <p class="font-medium">Please fix the following errors:</p>
+              <ul class="list-disc list-inside mt-2">
+                {% for field in form.errors %}
+                  <li>
+                    {{ field | capitalize }}
+                    {{ form.errors.messages[field] }}
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+
+          <div class="space-y-4">
+            <div>
+              <label for="contact-name" class="block text-sm font-medium text-gray-700 mb-1">Name *</label>
+              <input
+                type="text"
+                id="contact-name"
+                name="contact[name]"
+                required
+                class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:outline-none focus:ring-[#ECC689] focus:border-transparent"
+              >
+            </div>
+
+            <div>
+              <label for="contact-email" class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+              <input
+                type="email"
+                id="contact-email"
+                name="contact[email]"
+                required
+                class="w-full focus:outline-none px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#ECC689] focus:border-transparent"
+              >
+            </div>
+
+            <div>
+              <label for="contact-phone" class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+              <input
+                type="tel"
+                id="contact-phone"
+                name="contact[phone]"
+                class="w-full px-4  focus:outline-none  py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#ECC689] focus:border-transparent"
+              >
+            </div>
+
+            <div>
+              <label for="contact-message" class="block text-sm font-medium text-gray-700 mb-1">Message *</label>
+              <textarea
+                id="contact-message"
+                name="contact[body]"
+                rows="5"
+                required
+                class="w-full px-4 focus:outline-none py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#ECC689] focus:border-transparent"
+              ></textarea>
+            </div>
+
+            <button
+              type="submit"
+              class="w-full bg-[#ECC689] hover:bg-[#F9E2A9] text-white font-medium py-3 px-6 rounded-md transition-colors"
+            >
+              {{ section.settings.button_text }}
+            </button>
+          </div>
+        {% endform %}
+      </div>
     </div>
   </div>
 </div>
+
+{% schema %}
+{
+  "name": "Contact Section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero Banner"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Get In Touch"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Your Style, Our Expertise. Elevate Your Wardrobe with Personalized Service."
+    },
+    {
+      "type": "header",
+      "content": "Contact Information"
+    },
+    {
+      "type": "text",
+      "id": "info_heading",
+      "label": "Contact Info Heading",
+      "default": "Contact Information"
+    },
+    {
+      "type": "text",
+      "id": "phone",
+      "label": "Phone Number",
+      "default": "Bla Bla Bla Bla"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Email Address",
+      "default": "Bla Bla Bla Bla"
+    },
+    {
+      "type": "textarea",
+      "id": "address",
+      "label": "Address",
+      "default": "Bla Bla Bla Bla"
+    },
+    {
+      "type": "textarea",
+      "id": "hours",
+      "label": "Business Hours",
+      "default": "Mon-Fri: 9:00 AM - 6:00 PM\nSat-Sun: 10:00 AM - 4:00 PM"
+    },
+    {
+      "type": "header",
+      "content": "Contact Form"
+    },
+    {
+      "type": "text",
+      "id": "form_heading",
+      "label": "Form Heading",
+      "default": "Send Us a Message"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Submit Button Text",
+      "default": "Send Message"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success Message",
+      "default": "Thank you for contacting us! We'll get back to you soon."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact Section"
+    }
+  ]
+}
+{% endschema %}
