@@ -1,8 +1,43 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "template": {
-      "type": "template-contact"
+      "type": "template-contact",
+      "settings": {
+        "background_image": "shopify://shop_images/haupes-jIaJM8sTs04-unsplash.jpg",
+        "heading": "Get In Touch",
+        "subheading": "Your Style, Our Expertise. Elevate Your Wardrobe with Personalized Service.",
+        "info_heading": "Contact Information",
+        "phone": "Bla Bla Bla Bla",
+        "email": "Bla Bla Bla Bla",
+        "address": "Bla Bla Bla Bla",
+        "hours": "Mon-Fri: 9:00 AM - 6:00 PM\nSat-Sun: 10:00 AM - 4:00 PM",
+        "form_heading": "Send Us a Message",
+        "button_text": "Send Message",
+        "success_message": "Thank you for contacting us! We'll get back to you soon."
+      }
+    },
+    "homepage_qFp3iT": {
+      "type": "homepage",
+      "name": "Hero Banner",
+      "settings": {
+        "heading": "Discover Timeless Elegance",
+        "subheading": "Luxury meets sophistication",
+        "button_text": "Shop Collection",
+        "button_link": "shopify://collections/all"
+      }
     }
   },
-  "order": ["template"]
+  "order": [
+    "template",
+    "homepage_qFp3iT"
+  ]
 }
