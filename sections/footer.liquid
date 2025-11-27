@@ -1,36 +1,41 @@
-<footer class="min-h-60 bg-[#292c2f]">
-  <div class="h-4/5 border-b-2 border-b-[#939498] py-4 w-full px-4">
-    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between flex-wrap">
-      {% for link in linklists.footer.links %}
-        {% if link.links != blank %}
-          <div class="flex flex-row sm:flex-col items-center md:items-start gap-2">
-            <h4 class="text-2xl text-white my-4 font-medium flex flex-row sm:flex-col ">
-              {{ link.title }}
-            </h4>
-            {% for sublink in link.links %}
-              <a class="text-[#ECC689] underline font-medium my-1 cursor-pointer hover:text-[#e6b76b]">
-                {{- sublink.title -}}
-              </a>
-            {% endfor %}
-          </div>
-        {% else %}
-
-        {% endif %}
-      {% endfor %}
-      <div class="flex flex-row sm:flex-col items-center md:items-start gap-2">
-        <h4 class="text-2xl text-white my-4 font-medium flex flex-row sm:flex-col">Social Media</h4>
-        <div>
-          <a class="text-[#ECC689]"><i class="fa-brands fa-facebook-f"></i></a>
-          <a class="text-[#ECC689]"><i class="fa-brands fa-instagram"></i></a>
-          <a class="text-[#ECC689]"><i class="fa-brands fa-x-twitter"></i></a>
-          <a class="text-[#ECC689]"><i class="fa-brands fa-tiktok"></i></a>
+<footer class="min-h-60 bg-[#939498] mt-6">
+  <div>
+    <div class="h-1/2 py-4 w-full px-4 max-w-6xl mx-auto border-b-2 border-b-[#ECC689] ">
+      <div class="flex flex-row sm:flex-col items-center gap-2">
+        <h4 class="text-2xl text-white font-medium flex flex-row sm:flex-col">Follow Us on Social Media</h4>
+        <div class="text-3xl">
+          <a class="text-[#ECC689] hover:text-[#e6b76b]"><i class="fa-brands fa-facebook-f"></i></a>
+          <a class="text-[#ECC689] hover:text-[#e6b76b]"><i class="fa-brands fa-instagram"></i></a>
+          <a class="text-[#ECC689] hover:text-[#e6b76b]"><i class="fa-brands fa-x-twitter"></i></a>
+          <a class="text-[#ECC689] hover:text-[#e6b76b]"><i class="fa-brands fa-tiktok"></i></a>
         </div>
       </div>
     </div>
-  </div>
-  <div class="h-1/5">
-    <div class="max-w-6xl mx-auto flex justify-center items-center">
-      <p class="text-[#939498] py-2">
+    <div class="h-1/2 bg-[#292c2f]">
+      <div class="max-w-6xl mx-auto flex justify-center items-center  border-b-2 border-b-[#ECC689] ">
+        <div class="">
+          <img src="{{ shop.brand.logo | image_url }}" class="max-w-36 md:max-w-64" width="" height="">
+        </div>
+        <div class="flex flex-col sm:flex-row justify-between flex-wrap gap-3">
+          {% for link in linklists.footer.links %}
+            {% if link.links != blank %}
+              <div class="flex flex-row sm:flex-col items-center md:items-start gap-2">
+                <h4 class="text-lg sm:text-2xl text-white my-4 font-medium flex flex-row sm:flex-col ">
+                  {{ link.title }}
+                </h4>
+                {% for sublink in link.links %}
+                  <a class="text-xs md:text-lg text-[#ECC689] underline font-medium my-1 cursor-pointer hover:text-[#e6b76b]">
+                    {{- sublink.title -}}
+                  </a>
+                {% endfor %}
+              </div>
+            {% else %}
+
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      <p class="text-[#939498] py-2 text-center">
         <i class="fa-regular fa-copyright"></i> Elegant Eagle Fashion Store. All right reserved.
       </p>
     </div>
