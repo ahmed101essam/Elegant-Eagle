@@ -1,3 +1,32 @@
+<style>
+  .swiper {
+    width: 100%;
+    padding: 20px 0 50px 0;
+  }
+
+  .swiper-slide {
+    width: auto;
+  }
+
+  .swiper-button-next,
+  .swiper-button-prev {
+    color: #ecc689;
+    background-color: #939498;
+    font-size: 14px;
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+  }
+  .swiper-button-next::after,
+  .swiper-button-prev::after {
+    /* This targets the actual arrow character/icon */
+    font-size: 30px; /* Adjust this value (e.g., 30px is much bigger than your 14px) */
+  }
+
+  .swiper-pagination-bullet-active {
+    background: #ecc689;
+  }
+</style>
 <div class="max-w-6xl mx-auto">
   <div
     class="hero h-48 md:h-96 mt-12 p-2"
@@ -19,7 +48,82 @@
       </a>
     </div>
   </div>
+  <div class="new-collection mt-20 ">
+    <h3 class="text-3xl my-3 text-center text-[#ECC689]">New Arrivals</h3>
+
+    {% assign new_products = collections.all.products | sort: 'created_at' | reverse | limit: 8 %}
+    <div class="new-products swiper newProductsSwiper">
+      <div class="swiper-wrapper px-3">
+        {% for product in new_products %}
+          <div class="swiper-slide">
+            <a href="{{ product.url }}">
+              <div class="product-card border border-[#ECC689] p-2">
+                <div class="border border-[#ECC689] w-full overflow-hidden h-60">
+                  <img
+                    width=""
+                    height=""
+                    src="{{ product.featured_image | image_url:medium }}"
+                    class="w-full h-full object-cover transition duration-500 hover:scale-125"
+                  >
+                </div>
+                <div>
+                  <p class="text-lg font-medium my-2 w-full text-ellipsis text-nowrap">
+                    {{ product.title | truncate: 30 }}
+                  </p>
+                  <p class="font-bold">{{ product.price | money }}</p>
+                </div>
+                <!-- product display -->
+              </div>
+            </a>
+          </div>
+        {% endfor %}
+      </div>
+      <div class="swiper-button-next"></div>
+      <div class="swiper-button-prev"></div>
+
+      <!-- Pagination -->
+      <div class="swiper-pagination"></div>
+    </div>
+  </div>
+  <div class="flex justify-center">
+    <a
+      href="{{ routes.all_products_collection_url }}"
+      class="bg-[#ecc689] text-white px-4 py-2 font-medium rounded-full"
+      >Shop all</a
+    >
+  </div>
 </div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    new Swiper('.newProductsSwiper', {
+      slidesPerView: 1.2,
+      spaceBetween: 16,
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+      breakpoints: {
+        640: {
+          slidesPerView: 2.2,
+          spaceBetween: 20,
+        },
+        768: {
+          slidesPerView: 3.2,
+          spaceBetween: 24,
+        },
+        1024: {
+          slidesPerView: 4,
+          spaceBetween: 24,
+        },
+      },
+    });
+  });
+</script>
 
 {% schema %}
 {

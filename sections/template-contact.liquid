@@ -1,0 +1,12 @@
+<div class="">
+  <div class="max-w-6xl mx-auto">
+    <div
+      class="h-48 md:h-96 mt-12 p-2"
+      style="{% if section.settings.background_image %}background-image: url('{{ section.settings.background_image | image_url: width: 1920 }}'); background-size: cover; background-position: center;{% endif %}"
+    >
+      <div
+        class="h-full border-double border-6 border-[#ECC689] p-2 md:p-6 flex flex-col gap-1 md:gap-2 justify-end"
+      ></div>
+    </div>
+  </div>
+</div>
