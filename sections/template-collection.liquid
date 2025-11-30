@@ -1,51 +1,551 @@
 {% paginate collection.products by 12 %}
-  <div class="max-w-6xl mx-auto">
-    <h1 class="text-3xl text-center font-[playfair]">{{ collection.title }}</h1>
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-      {% for product in collection.products %}
-        <div class="w-full max-w-10/12 mx-auto md:max-w-full">
-          <div class="relative bg-white shadow-xl rounded-lg overflow-hidden">
-            {% if product.compare_at_price < product.price %}
-              {% assign discount = product.compare_at_price | minus: product.price %}
-              {% assign percent = discount | times: 100 | divided_by: product.compare_at_price %}
-              <span class="block absolute z-10 px-4 text-center font-medium translate-y-1/2 bg-[#ECC689] -rotate-90 top-0 right-0">
-                {{- percent | round }}%</span
-              >
-            {% endif %}
-            <a href="{{ product.url }}">
-              <div class="product-card border border-[#ECC689] p-2">
-                <div class="border border-[#ECC689] w-full overflow-hidden h-60">
-                  <img
-                    width=""
-                    height=""
-                    src="{{ product.featured_image | image_url:medium }}"
-                    class="w-full h-full object-cover transition duration-500 hover:scale-125"
+  <div class="max-w-7xl mx-auto px-4 py-8">
+    <!-- Collection Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-3xl md:text-5xl font-[playfair] mb-3 text-[#292c2f]">{{ collection.title }}</h1>
+      {% if collection.description != blank %}
+        <p class="text-gray-600 max-w-2xl mx-auto text-lg">{{ collection.description }}</p>
+      {% endif %}
+      <p class="text-sm text-gray-500 mt-3">{{ collection.products_count }} products</p>
+    </div>
+
+    <div class="flex flex-col lg:flex-row gap-8">
+      <!-- Sidebar Filters -->
+      <aside class="lg:w-72 flex-shrink-0">
+        <div class="bg-white border-2 border-[#ECC689] rounded-lg p-6 sticky top-4">
+          <!-- Mobile Filter Toggle -->
+          <button
+            id="filter-toggle"
+            class="lg:hidden w-full flex items-center justify-between mb-4 bg-[#ECC689] hover:bg-[#F9E2A9] text-white py-3 px-4 rounded-md transition-colors"
+          >
+            <span class="font-medium">Show Filters</span>
+            <i class="fa-solid fa-sliders"></i>
+          </button>
+
+          <div id="filters" class="hidden lg:block">
+            <div class="flex items-center justify-between mb-6">
+              <h2 class="text-xl font-semibold text-[#292c2f]">Filters</h2>
+              <button id="clear-all-filters" class="text-sm text-[#ECC689] hover:underline">Clear All</button>
+            </div>
+
+            <!-- Price Filter -->
+            <div class="mb-6 pb-6 border-b border-gray-200">
+              <h3 class="font-semibold mb-4 flex items-center justify-between cursor-pointer filter-heading">
+                <span class="text-[#292c2f]">Price Range</span>
+                <i class="fa-solid fa-chevron-down text-sm text-[#ECC689]"></i>
+              </h3>
+              <div class="filter-content space-y-3">
+                <label class="flex items-center gap-3 cursor-pointer hover:text-[#ECC689] transition-colors group">
+                  <input type="checkbox" class="filter-price w-4 h-4 accent-[#ECC689]" data-min="0" data-max="2500">
+                  <span class="group-hover:translate-x-1 transition-transform">Under $25</span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer hover:text-[#ECC689] transition-colors group">
+                  <input type="checkbox" class="filter-price w-4 h-4 accent-[#ECC689]" data-min="2500" data-max="5000">
+                  <span class="group-hover:translate-x-1 transition-transform">$25 - $50</span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer hover:text-[#ECC689] transition-colors group">
+                  <input type="checkbox" class="filter-price w-4 h-4 accent-[#ECC689]" data-min="5000" data-max="10000">
+                  <span class="group-hover:translate-x-1 transition-transform">$50 - $100</span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer hover:text-[#ECC689] transition-colors group">
+                  <input
+                    type="checkbox"
+                    class="filter-price w-4 h-4 accent-[#ECC689]"
+                    data-min="10000"
+                    data-max="999999"
                   >
-                </div>
-                <div>
-                  <span class="block font-bold text-[#ECC689] text-sm uppercase tracking-widest">
-                    {{- product.category -}}
-                  </span>
-                  <p class="text-lg font-medium my-2 w-full text-ellipsis text-nowrap">
-                    {{ product.title | truncate: 30 }}
-                  </p>
-                  <div class="flex gap-2 items-center">
-                    <p class="text-lg font-medium text-[#292c2f] {% if product.compare_at_price != product.price %} {% if product.compare_at_price>0 %} line-through{% endif %}{% endif %}">
-                      {{ product.price | money }}
-                    </p>
-                    <p class="text-xl text-[#ECC689]">
-                      {{ product.compare_at_price | money }}
-                    </p>
-                  </div>
-                </div>
-                <!-- product display -->
+                  <span class="group-hover:translate-x-1 transition-transform">Over $100</span>
+                </label>
               </div>
-            </a>
+            </div>
+
+            <!-- Availability Filter -->
+            <div class="mb-6 pb-6 border-b border-gray-200">
+              <h3 class="font-semibold mb-4 flex items-center justify-between cursor-pointer filter-heading">
+                <span class="text-[#292c2f]">Availability</span>
+                <i class="fa-solid fa-chevron-down text-sm text-[#ECC689]"></i>
+              </h3>
+              <div class="filter-content space-y-3">
+                <label class="flex items-center gap-3 cursor-pointer hover:text-[#ECC689] transition-colors group">
+                  <input type="checkbox" class="filter-availability w-4 h-4 accent-[#ECC689]" data-value="in-stock">
+                  <span class="group-hover:translate-x-1 transition-transform">In Stock</span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer hover:text-[#ECC689] transition-colors group">
+                  <input type="checkbox" class="filter-availability w-4 h-4 accent-[#ECC689]" data-value="out-of-stock">
+                  <span class="group-hover:translate-x-1 transition-transform">Out of Stock</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Product Type Filter -->
+            {% assign product_types = collection.products | map: 'type' | uniq | sort %}
+            {% if product_types.size > 0 %}
+              <div class="mb-6 pb-6 border-b border-gray-200">
+                <h3 class="font-semibold mb-4 flex items-center justify-between cursor-pointer filter-heading">
+                  <span class="text-[#292c2f]">Category</span>
+                  <i class="fa-solid fa-chevron-down text-sm text-[#ECC689]"></i>
+                </h3>
+                <div class="filter-content space-y-3 max-h-48 overflow-y-auto">
+                  {% for type in product_types %}
+                    {% if type != blank %}
+                      <label class="flex items-center gap-3 cursor-pointer hover:text-[#ECC689] transition-colors group">
+                        <input
+                          type="checkbox"
+                          class="filter-type w-4 h-4 accent-[#ECC689]"
+                          data-value="{{ type | handleize }}"
+                        >
+                        <span class="group-hover:translate-x-1 transition-transform">{{ type }}</span>
+                      </label>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+            {% endif %}
           </div>
         </div>
-      {% else %}
-        <p>There are no products inside of this collection</p>
-      {% endfor %}
+      </aside>
+
+      <!-- Products Section -->
+      <div class="flex-1">
+        <!-- Toolbar -->
+        <div class="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4 bg-white border border-gray-200 rounded-lg p-4">
+          <div class="flex items-center gap-3">
+            <label for="sort-by" class="text-sm font-medium text-gray-700">Sort by:</label>
+            <select
+              id="sort-by"
+              class="border border-gray-300 rounded-md px-4 py-2 bg-white focus:ring-2 focus:ring-[#ECC689] focus:border-transparent transition-all"
+            >
+              <option value="manual">Featured</option>
+              <option value="best-selling">Best Selling</option>
+              <option value="title-ascending">A-Z</option>
+              <option value="title-descending">Z-A</option>
+              <option value="price-ascending">Price: Low to High</option>
+              <option value="price-descending">Price: High to Low</option>
+              <option value="created-descending">Newest First</option>
+              <option value="created-ascending">Oldest First</option>
+            </select>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <span class="text-sm font-medium text-gray-700">View:</span>
+            <div class="flex gap-2 bg-gray-100 p-1 rounded-md">
+              <button
+                id="grid-view-4"
+                class="p-2 rounded hover:bg-white transition-colors active-view"
+                title="4 columns"
+              >
+                <i class="fa-solid fa-grip text-[#ECC689]"></i>
+              </button>
+              <button id="grid-view-3" class="p-2 rounded hover:bg-white transition-colors" title="3 columns">
+                <i class="fa-solid fa-th-large text-gray-500"></i>
+              </button>
+              <button id="grid-view-2" class="p-2 rounded hover:bg-white transition-colors" title="2 columns">
+                <i class="fa-solid fa-th text-gray-500"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Filters -->
+        <div id="active-filters" class="mb-6 hidden">
+          <div class="flex flex-wrap items-center gap-2 bg-gray-50 p-4 rounded-lg border border-gray-200">
+            <span class="text-sm font-medium text-gray-700">Active filters:</span>
+            <div id="active-filters-list" class="flex flex-wrap gap-2"></div>
+          </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {% for product in collection.products %}
+            <div
+              class="product-item"
+              data-price="{{ product.price }}"
+              data-available="{{ product.available }}"
+              data-type="{{ product.type | handleize }}"
+              data-vendor="{{ product.vendor | handleize }}"
+            >
+              <div class="group relative bg-white rounded-lg overflow-hidden border-2 border-[#ECC689] hover:shadow-2xl transition-all duration-300 h-full flex flex-col">
+                <!-- Badges Container -->
+                <div class="absolute top-2 left-2 right-2 z-10 flex justify-between items-start">
+                  <!-- Sale Badge -->
+                  {% if product.compare_at_price > product.price %}
+                    {% assign discount = product.compare_at_price | minus: product.price %}
+                    {% assign percent = discount | times: 100 | divided_by: product.compare_at_price %}
+                    <span class="bg-red-500 text-white px-3 py-1.5 rounded-full text-xs font-bold shadow-lg">
+                      -{{ percent | round }}% OFF
+                    </span>
+                  {% else %}
+                    <span></span>
+                  {% endif %}
+
+                  <!-- Stock Badge -->
+                  {% unless product.available %}
+                    <span class="bg-gray-800 text-white px-3 py-1.5 rounded-full text-xs font-medium shadow-lg">
+                      Sold Out
+                    </span>
+                  {% endunless %}
+                </div>
+
+                <a href="{{ product.url }}" class="block flex-1 flex flex-col">
+                  <!-- Product Image -->
+                  <div
+                    class="relative border-2 border-[#ECC689] m-2 overflow-hidden bg-gray-50"
+                    style="padding-bottom: 100%;"
+                  >
+                    {% if product.featured_image %}
+                      <img
+                        width=""
+                        height=""
+                        src="{{ product.featured_image | image_url: width: 600 }}"
+                        alt="{{ product.title | escape }}"
+                        class="absolute inset-0 w-full h-full object-cover transition duration-700 group-hover:scale-110"
+                        loading="lazy"
+                      >
+                    {% else %}
+                      {{ 'product-1' | placeholder_svg_tag: 'absolute inset-0 w-full h-full object-cover' }}
+                    {% endif %}
+
+                    <!-- Hover Overlay -->
+                    <div
+                      class="absolute inset-0 bg-black opacity-0  group-hover:opacity-10 transition-all duration-300"
+                    ></div>
+                  </div>
+
+                  <!-- Product Info -->
+                  <div class="p-4 flex-1 flex flex-col">
+                    {% if product.vendor %}
+                      <span class="block text-xs text-[#ECC689] font-bold uppercase tracking-widest mb-2">
+                        {{ product.vendor }}
+                      </span>
+                    {% endif %}
+
+                    <h3 class="text-base font-medium mb-3 overflow-hidden text-ellipsis line-clamp-2 group-hover:text-[#ECC689] transition-colors min-h-[3rem]">
+                      {{ product.title }}
+                    </h3>
+
+                    <!-- Price -->
+                    <div class="mt-auto">
+                      <div class="flex items-center gap-2 flex-wrap">
+                        {% if product.compare_at_price > product.price %}
+                          <span class="text-xl font-bold text-[#ECC689]">
+                            {{ product.price | money }}
+                          </span>
+                          <span class="text-sm text-gray-400 line-through">
+                            {{ product.compare_at_price | money }}
+                          </span>
+                        {% else %}
+                          <span class="text-xl font-bold text-[#292c2f]">
+                            {{ product.price | money }}
+                          </span>
+                        {% endif %}
+                      </div>
+
+                      <!-- Variants Info -->
+                      {% if product.variants.size > 1 %}
+                        <p class="text-xs text-gray-500 mt-2">
+                          <i class="fa-solid fa-circle-check text-[#ECC689]"></i>
+                          {{ product.variants.size }} options available
+                        </p>
+                      {% endif %}
+                    </div>
+                  </div>
+                </a>
+
+                <!-- Quick View Button (Optional) -->
+                <div class="p-4 pt-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <a
+                    href="{{ product.url }}"
+                    class="block w-full bg-[#ECC689] hover:bg-[#F9E2A9] text-white text-center font-medium py-2.5 px-4 rounded-md transition-colors"
+                  >
+                    View Details
+                  </a>
+                </div>
+              </div>
+            </div>
+          {% else %}
+            <div class="col-span-full text-center py-16">
+              <i class="fa-solid fa-box-open text-8xl text-gray-200 mb-4"></i>
+              <p class="text-2xl text-gray-500 font-medium">No products in this collection</p>
+            </div>
+          {% endfor %}
+        </div>
+
+        <!-- No Results Message -->
+        <div
+          id="no-results"
+          class="hidden text-center py-16 bg-white rounded-lg border-2 border-dashed border-gray-300"
+        >
+          <i class="fa-solid fa-magnifying-glass text-8xl text-gray-200 mb-4"></i>
+          <p class="text-2xl text-gray-600 font-medium mb-2">No products match your filters</p>
+          <p class="text-gray-500 mb-4">Try adjusting your selection</p>
+          <button
+            id="clear-filters-btn"
+            class="bg-[#ECC689] hover:bg-[#F9E2A9] text-white px-6 py-2 rounded-md transition-colors"
+          >
+            Clear All Filters
+          </button>
+        </div>
+
+        <!-- Pagination -->
+        {% if paginate.pages > 1 %}
+          <div class="mt-12 flex justify-center">
+            <nav class="flex items-center gap-2">
+              {% if paginate.previous %}
+                <a
+                  href="{{ paginate.previous.url }}"
+                  class="px-4 py-2 border-2 border-[#ECC689] rounded-md hover:bg-[#ECC689] hover:text-white transition-colors"
+                >
+                  <i class="fa-solid fa-chevron-left"></i>
+                </a>
+              {% endif %}
+
+              {% for part in paginate.parts %}
+                {% if part.is_link %}
+                  <a
+                    href="{{ part.url }}"
+                    class="px-4 py-2 border-2 border-[#ECC689] rounded-md hover:bg-[#ECC689] hover:text-white transition-colors"
+                  >
+                    {{ part.title }}
+                  </a>
+                {% else %}
+                  {% if part.title == paginate.current_page %}
+                    <span class="px-4 py-2 bg-[#ECC689] text-white rounded-md font-bold border-2 border-[#ECC689]">
+                      {{ part.title }}
+                    </span>
+                  {% else %}
+                    <span class="px-4 py-2 text-gray-400">{{ part.title }}</span>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+
+              {% if paginate.next %}
+                <a
+                  href="{{ paginate.next.url }}"
+                  class="px-4 py-2 border-2 border-[#ECC689] rounded-md hover:bg-[#ECC689] hover:text-white transition-colors"
+                >
+                  <i class="fa-solid fa-chevron-right"></i>
+                </a>
+              {% endif %}
+            </nav>
+          </div>
+        {% endif %}
+      </div>
     </div>
   </div>
+
+  <!-- Filtering and Sorting JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const productsGrid = document.getElementById('products-grid');
+      const products = Array.from(document.querySelectorAll('.product-item'));
+      const sortBy = document.getElementById('sort-by');
+      const filterToggle = document.getElementById('filter-toggle');
+      const filters = document.getElementById('filters');
+      const clearAllFiltersBtn = document.getElementById('clear-all-filters');
+      const clearFiltersBtn = document.getElementById('clear-filters-btn');
+      const activeFiltersContainer = document.getElementById('active-filters');
+      const activeFiltersList = document.getElementById('active-filters-list');
+      const noResults = document.getElementById('no-results');
+
+      // Grid view toggles
+      const gridViews = {
+        4: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6',
+        3: 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6',
+        2: 'grid grid-cols-1 sm:grid-cols-2 gap-6',
+      };
+
+      document.getElementById('grid-view-4').addEventListener('click', () => changeGrid('4'));
+      document.getElementById('grid-view-3').addEventListener('click', () => changeGrid('3'));
+      document.getElementById('grid-view-2').addEventListener('click', () => changeGrid('2'));
+
+      function changeGrid(cols) {
+        productsGrid.className = gridViews[cols];
+        document.querySelectorAll('[id^="grid-view-"]').forEach((btn) => {
+          btn.classList.remove('active-view');
+          btn.querySelector('i').classList.remove('text-[#ECC689]');
+          btn.querySelector('i').classList.add('text-gray-500');
+        });
+        const activeBtn = document.getElementById(`grid-view-${cols}`);
+        activeBtn.classList.add('active-view');
+        activeBtn.querySelector('i').classList.remove('text-gray-500');
+        activeBtn.querySelector('i').classList.add('text-[#ECC689]');
+      }
+
+      // Mobile filter toggle
+      if (filterToggle) {
+        filterToggle.addEventListener('click', function () {
+          filters.classList.toggle('hidden');
+          const icon = this.querySelector('i');
+          const text = this.querySelector('span');
+          if (filters.classList.contains('hidden')) {
+            text.textContent = 'Show Filters';
+            icon.className = 'fa-solid fa-sliders';
+          } else {
+            text.textContent = 'Hide Filters';
+            icon.className = 'fa-solid fa-times';
+          }
+        });
+      }
+
+      // Collapsible filter sections
+      document.querySelectorAll('.filter-heading').forEach((heading) => {
+        heading.addEventListener('click', function () {
+          const content = this.nextElementSibling;
+          const icon = this.querySelector('i');
+          content.classList.toggle('hidden');
+          icon.classList.toggle('fa-chevron-down');
+          icon.classList.toggle('fa-chevron-up');
+        });
+      });
+
+      // Sorting
+      sortBy.addEventListener('change', function () {
+        const value = this.value;
+        const visibleProducts = products.filter((p) => p.style.display !== 'none');
+
+        const sorted = [...visibleProducts].sort((a, b) => {
+          const aTitle = a.querySelector('h3').textContent.trim();
+          const bTitle = b.querySelector('h3').textContent.trim();
+          const aPrice = parseInt(a.dataset.price);
+          const bPrice = parseInt(b.dataset.price);
+
+          switch (value) {
+            case 'title-ascending':
+              return aTitle.localeCompare(bTitle);
+            case 'title-descending':
+              return bTitle.localeCompare(aTitle);
+            case 'price-ascending':
+              return aPrice - bPrice;
+            case 'price-descending':
+              return bPrice - aPrice;
+            default:
+              return 0;
+          }
+        });
+
+        productsGrid.innerHTML = '';
+        products.forEach((product) => {
+          if (product.style.display !== 'none') {
+            productsGrid.removeChild(product);
+          }
+        });
+        sorted.forEach((product) => productsGrid.appendChild(product));
+        products.filter((p) => p.style.display === 'none').forEach((p) => productsGrid.appendChild(p));
+      });
+
+      // Filtering logic
+      function filterProducts() {
+        const priceFilters = Array.from(document.querySelectorAll('.filter-price:checked'));
+        const availabilityFilters = Array.from(document.querySelectorAll('.filter-availability:checked'));
+        const typeFilters = Array.from(document.querySelectorAll('.filter-type:checked'));
+        const vendorFilters = Array.from(document.querySelectorAll('.filter-vendor:checked'));
+
+        let visibleCount = 0;
+
+        products.forEach((product) => {
+          let show = true;
+          const price = parseInt(product.dataset.price);
+          const available = product.dataset.available === 'true';
+          const type = product.dataset.type;
+          const vendor = product.dataset.vendor;
+
+          // Price filter
+          if (priceFilters.length > 0) {
+            show = priceFilters.some((filter) => {
+              const min = parseInt(filter.dataset.min);
+              const max = parseInt(filter.dataset.max);
+              return price >= min && price <= max;
+            });
+          }
+
+          // Availability filter
+          if (show && availabilityFilters.length > 0) {
+            show = availabilityFilters.some((filter) => {
+              const value = filter.dataset.value;
+              return (value === 'in-stock' && available) || (value === 'out-of-stock' && !available);
+            });
+          }
+
+          // Type filter
+          if (show && typeFilters.length > 0) {
+            show = typeFilters.some((filter) => filter.dataset.value === type);
+          }
+
+          // Vendor filter
+          if (show && vendorFilters.length > 0) {
+            show = vendorFilters.some((filter) => filter.dataset.value === vendor);
+          }
+
+          product.style.display = show ? 'block' : 'none';
+          if (show) visibleCount++;
+        });
+
+        // Show/hide no results
+        if (visibleCount === 0) {
+          noResults.classList.remove('hidden');
+          productsGrid.classList.add('hidden');
+        } else {
+          noResults.classList.add('hidden');
+          productsGrid.classList.remove('hidden');
+        }
+
+        updateActiveFilters();
+      }
+
+      // Update active filters display
+      function updateActiveFilters() {
+        const allFilters = document.querySelectorAll('input[type="checkbox"]:checked');
+        activeFiltersList.innerHTML = '';
+
+        if (allFilters.length > 0) {
+          activeFiltersContainer.classList.remove('hidden');
+          allFilters.forEach((filter) => {
+            const label = filter.nextElementSibling.textContent.trim();
+            const badge = document.createElement('span');
+            badge.className =
+              'inline-flex items-center gap-2 bg-[#ECC689] text-white px-3 py-1.5 rounded-full text-sm font-medium shadow-sm hover:bg-[#F9E2A9] transition-colors';
+            badge.innerHTML = `${label} <button class="hover:text-red-200 font-bold text-lg leading-none" title="Remove filter">×</button>`;
+            badge.querySelector('button').addEventListener('click', function () {
+              filter.checked = false;
+              filterProducts();
+            });
+            activeFiltersList.appendChild(badge);
+          });
+        } else {
+          activeFiltersContainer.classList.add('hidden');
+        }
+      }
+
+      // Attach filter listeners
+      document
+        .querySelectorAll('.filter-price, .filter-availability, .filter-type, .filter-vendor')
+        .forEach((checkbox) => {
+          checkbox.addEventListener('change', filterProducts);
+        });
+
+      // Clear all filters
+      function clearAllFilters() {
+        document.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
+          checkbox.checked = false;
+        });
+        filterProducts();
+      }
+
+      if (clearAllFiltersBtn) clearAllFiltersBtn.addEventListener('click', clearAllFilters);
+      if (clearFiltersBtn) clearFiltersBtn.addEventListener('click', clearAllFilters);
+    });
+  </script>
+
+  <style>
+    .active-view {
+      background-color: white;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+  </style>
 {% endpaginate %}
