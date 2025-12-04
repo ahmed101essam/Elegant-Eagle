@@ -19,15 +19,16 @@
   }
   .swiper-button-next::after,
   .swiper-button-prev::after {
-    /* This targets the actual arrow character/icon */
-    font-size: 30px; /* Adjust this value (e.g., 30px is much bigger than your 14px) */
+    font-size: 30px;
   }
 
   .swiper-pagination-bullet-active {
     background: #ecc689;
   }
 </style>
+
 <div class="max-w-6xl mx-auto">
+  <!-- Hero Section -->
   <div
     class="hero h-48 md:h-96 mt-12 p-2"
     style="{% if section.settings.background_image %}background-image: url('{{ section.settings.background_image | image_url: width: 1920 }}'); background-size: cover; background-position: center;{% endif %}"
@@ -38,17 +39,16 @@
       </h2>
       <p class="text-lg md:text-xl">{{ section.settings.subheading }}</p>
       <a
-        class="
-          block mt-1 py-0.5 px-3 text-lg md:py-2 md:px-8 md:text-xl w-fit rounded-full text-white font-medium
-          cursor-pointer bg-[#ECC689] hover:bg-[#F9E2A9]
-        "
+        class="block mt-1 py-0.5 px-3 text-lg md:py-2 md:px-8 md:text-xl w-fit rounded-full text-white font-medium cursor-pointer bg-[#ECC689] hover:bg-[#F9E2A9]"
         href="{{ section.settings.button_link }}"
       >
         {{- section.settings.button_text -}}
       </a>
     </div>
   </div>
-  <div class="new-collection mt-20 ">
+
+  <!-- New Arrivals Section -->
+  <div class="new-collection mt-20">
     <h3 class="text-3xl my-3 text-center text-[#ECC689]">New Arrivals</h3>
 
     {% assign new_products = collections.all.products | sort: 'created_at' | reverse | limit: 8 %}
@@ -72,7 +72,6 @@
                   </p>
                   <p class="font-bold">{{ product.price | money }}</p>
                 </div>
-                <!-- product display -->
               </div>
             </a>
           </div>
@@ -80,17 +79,160 @@
       </div>
       <div class="swiper-button-next"></div>
       <div class="swiper-button-prev"></div>
-
-      <!-- Pagination -->
       <div class="swiper-pagination"></div>
     </div>
   </div>
-  <div class="flex justify-center">
+  
+  <div class="flex justify-center mb-20">
     <a
       href="{{ routes.all_products_collection_url }}"
-      class="bg-[#ecc689] text-white px-4 py-2 font-medium rounded-full"
-      >Shop all</a
-    >
+      class="bg-[#ecc689] text-white px-4 py-2 font-medium rounded-full hover:bg-[#F9E2A9] transition"
+    >Shop all</a>
+  </div>
+
+  <!-- Featured Collections Section -->
+  <div class="featured-collections mt-20 px-3">
+    <h3 class="text-3xl my-8 text-center text-[#ECC689]">{{ section.settings.collections_heading }}</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {% if section.settings.collection_1 != blank %}
+        <a href="{{ collections[section.settings.collection_1].url }}" class="group">
+          <div class="border-double border-4 border-[#ECC689] overflow-hidden">
+            <img
+              src="{{ collections[section.settings.collection_1].image | image_url: width: 600 }}"
+              alt="{{ collections[section.settings.collection_1].title }}"
+              class="w-full h-64 object-cover transition duration-500 group-hover:scale-110"
+            >
+          </div>
+          <h4 class="text-xl font-medium text-center mt-3 text-[#ECC689]">
+            {{ collections[section.settings.collection_1].title }}
+          </h4>
+        </a>
+      {% endif %}
+      
+      {% if section.settings.collection_2 != blank %}
+        <a href="{{ collections[section.settings.collection_2].url }}" class="group">
+          <div class="border-double border-4 border-[#ECC689] overflow-hidden">
+            <img
+              src="{{ collections[section.settings.collection_2].image | image_url: width: 600 }}"
+              alt="{{ collections[section.settings.collection_2].title }}"
+              class="w-full h-64 object-cover transition duration-500 group-hover:scale-110"
+            >
+          </div>
+          <h4 class="text-xl font-medium text-center mt-3 text-[#ECC689]">
+            {{ collections[section.settings.collection_2].title }}
+          </h4>
+        </a>
+      {% endif %}
+      
+      {% if section.settings.collection_3 != blank %}
+        <a href="{{ collections[section.settings.collection_3].url }}" class="group">
+          <div class="border-double border-4 border-[#ECC689] overflow-hidden">
+            <img
+              src="{{ collections[section.settings.collection_3].image | image_url: width: 600 }}"
+              alt="{{ collections[section.settings.collection_3].title }}"
+              class="w-full h-64 object-cover transition duration-500 group-hover:scale-110"
+            >
+          </div>
+          <h4 class="text-xl font-medium text-center mt-3 text-[#ECC689]">
+            {{ collections[section.settings.collection_3].title }}
+          </h4>
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- About/Values Section -->
+  <div class="values-section mt-20 px-3">
+    <div class="border-double border-4 border-[#ECC689] p-6 md:p-12">
+      <h3 class="text-3xl text-center text-[#ECC689] mb-8">{{ section.settings.values_heading }}</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="text-center">
+          <div class="border border-[#ECC689] rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+            <span class="text-2xl text-[#ECC689]">✦</span>
+          </div>
+          <h4 class="text-xl font-medium mb-2 text-[#ECC689]">{{ section.settings.value_1_title }}</h4>
+          <p class="text-gray-600">{{ section.settings.value_1_text }}</p>
+        </div>
+        
+        <div class="text-center">
+          <div class="border border-[#ECC689] rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+            <span class="text-2xl text-[#ECC689]">✦</span>
+          </div>
+          <h4 class="text-xl font-medium mb-2 text-[#ECC689]">{{ section.settings.value_2_title }}</h4>
+          <p class="text-gray-600">{{ section.settings.value_2_text }}</p>
+        </div>
+        
+        <div class="text-center">
+          <div class="border border-[#ECC689] rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+            <span class="text-2xl text-[#ECC689]">✦</span>
+          </div>
+          <h4 class="text-xl font-medium mb-2 text-[#ECC689]">{{ section.settings.value_3_title }}</h4>
+          <p class="text-gray-600">{{ section.settings.value_3_text }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Testimonials Section -->
+  <div class="testimonials mt-20 px-3 mb-20">
+    <h3 class="text-3xl my-8 text-center text-[#ECC689]">{{ section.settings.testimonials_heading }}</h3>
+    <div class="swiper testimonialsSwiper">
+      <div class="swiper-wrapper">
+        {% if section.settings.testimonial_1_text != blank %}
+          <div class="swiper-slide">
+            <div class="border-double border-4 border-[#ECC689] p-6 md:p-8 h-full">
+              <p class="text-lg italic mb-4">"{{ section.settings.testimonial_1_text }}"</p>
+              <p class="text-[#ECC689] font-medium">— {{ section.settings.testimonial_1_author }}</p>
+            </div>
+          </div>
+        {% endif %}
+        
+        {% if section.settings.testimonial_2_text != blank %}
+          <div class="swiper-slide">
+            <div class="border-double border-4 border-[#ECC689] p-6 md:p-8 h-full">
+              <p class="text-lg italic mb-4">"{{ section.settings.testimonial_2_text }}"</p>
+              <p class="text-[#ECC689] font-medium">— {{ section.settings.testimonial_2_author }}</p>
+            </div>
+          </div>
+        {% endif %}
+        
+        {% if section.settings.testimonial_3_text != blank %}
+          <div class="swiper-slide">
+            <div class="border-double border-4 border-[#ECC689] p-6 md:p-8 h-full">
+              <p class="text-lg italic mb-4">"{{ section.settings.testimonial_3_text }}"</p>
+              <p class="text-[#ECC689] font-medium">— {{ section.settings.testimonial_3_author }}</p>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+      <div class="swiper-button-next"></div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-pagination"></div>
+    </div>
+  </div>
+
+  <!-- Newsletter Section -->
+  <div class="newsletter mt-20 mb-20 px-3">
+    <div class="border-double border-4 border-[#ECC689] p-8 md:p-12 text-center">
+      <h3 class="text-3xl text-[#ECC689] mb-4">{{ section.settings.newsletter_heading }}</h3>
+      <p class="text-lg mb-6">{{ section.settings.newsletter_text }}</p>
+      <form action="/contact#newsletter" method="post" class="flex flex-col md:flex-row gap-3 max-w-lg mx-auto">
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <input
+          type="email"
+          name="contact[email]"
+          placeholder="Enter your email"
+          required
+          class="flex-1 px-4 py-2 border border-[#ECC689] rounded-full focus:outline-none focus:ring-2 focus:ring-[#ECC689]"
+        >
+        <button
+          type="submit"
+          class="bg-[#ecc689] text-white px-6 py-2 font-medium rounded-full hover:bg-[#F9E2A9] transition"
+        >
+          Subscribe
+        </button>
+      </form>
+    </div>
   </div>
 </div>
 
@@ -122,13 +264,40 @@
         },
       },
     });
+
+    new Swiper('.testimonialsSwiper', {
+      slidesPerView: 1,
+      spaceBetween: 24,
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+      breakpoints: {
+        768: {
+          slidesPerView: 2,
+          spaceBetween: 24,
+        },
+        1024: {
+          slidesPerView: 3,
+          spaceBetween: 24,
+        },
+      },
+    });
   });
 </script>
 
 {% schema %}
 {
-  "name": "Hero Banner",
+  "name": "Complete Homepage",
   "settings": [
+    {
+      "type": "header",
+      "content": "Hero Section"
+    },
     {
       "type": "image_picker",
       "id": "background_image",
@@ -157,11 +326,144 @@
       "id": "button_link",
       "label": "Button Link",
       "default": "/collections/all"
+    },
+    {
+      "type": "header",
+      "content": "Featured Collections"
+    },
+    {
+      "type": "text",
+      "id": "collections_heading",
+      "label": "Collections Heading",
+      "default": "Shop By Category"
+    },
+    {
+      "type": "collection",
+      "id": "collection_1",
+      "label": "Collection 1"
+    },
+    {
+      "type": "collection",
+      "id": "collection_2",
+      "label": "Collection 2"
+    },
+    {
+      "type": "collection",
+      "id": "collection_3",
+      "label": "Collection 3"
+    },
+    {
+      "type": "header",
+      "content": "Values Section"
+    },
+    {
+      "type": "text",
+      "id": "values_heading",
+      "label": "Values Heading",
+      "default": "Why Choose Us"
+    },
+    {
+      "type": "text",
+      "id": "value_1_title",
+      "label": "Value 1 Title",
+      "default": "Premium Quality"
+    },
+    {
+      "type": "textarea",
+      "id": "value_1_text",
+      "label": "Value 1 Text",
+      "default": "Handpicked materials and expert craftsmanship in every piece"
+    },
+    {
+      "type": "text",
+      "id": "value_2_title",
+      "label": "Value 2 Title",
+      "default": "Timeless Design"
+    },
+    {
+      "type": "textarea",
+      "id": "value_2_text",
+      "label": "Value 2 Text",
+      "default": "Classic styles that transcend trends and last for years"
+    },
+    {
+      "type": "text",
+      "id": "value_3_title",
+      "label": "Value 3 Title",
+      "default": "Exceptional Service"
+    },
+    {
+      "type": "textarea",
+      "id": "value_3_text",
+      "label": "Value 3 Text",
+      "default": "Dedicated support and care for every customer"
+    },
+    {
+      "type": "header",
+      "content": "Testimonials"
+    },
+    {
+      "type": "text",
+      "id": "testimonials_heading",
+      "label": "Testimonials Heading",
+      "default": "What Our Customers Say"
+    },
+    {
+      "type": "textarea",
+      "id": "testimonial_1_text",
+      "label": "Testimonial 1 Text",
+      "default": "Absolutely stunning quality! Every piece I've purchased has exceeded my expectations."
+    },
+    {
+      "type": "text",
+      "id": "testimonial_1_author",
+      "label": "Testimonial 1 Author",
+      "default": "Sarah M."
+    },
+    {
+      "type": "textarea",
+      "id": "testimonial_2_text",
+      "label": "Testimonial 2 Text",
+      "default": "The attention to detail is remarkable. I always receive compliments on my purchases."
+    },
+    {
+      "type": "text",
+      "id": "testimonial_2_author",
+      "label": "Testimonial 2 Author",
+      "default": "James L."
+    },
+    {
+      "type": "textarea",
+      "id": "testimonial_3_text",
+      "label": "Testimonial 3 Text",
+      "default": "Beautiful designs and exceptional customer service. My go-to for elegant pieces."
+    },
+    {
+      "type": "text",
+      "id": "testimonial_3_author",
+      "label": "Testimonial 3 Author",
+      "default": "Emily R."
+    },
+    {
+      "type": "header",
+      "content": "Newsletter"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_heading",
+      "label": "Newsletter Heading",
+      "default": "Stay Connected"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_text",
+      "label": "Newsletter Text",
+      "default": "Subscribe to receive exclusive offers and updates"
     }
   ],
   "presets": [
     {
-      "name": "Hero Banner"
+      "name": "Complete Homepage"
     }
   ]
 }
