@@ -73,10 +73,7 @@
     }
   }
 
-  html[dir="rtl"] nav {
-    flex-direction: row-reverse;
-  }
-
+  
   html[dir="rtl"] [data-dropdown-menu] {
     left: auto;
     right: 50%;
@@ -144,7 +141,7 @@
       </div>
 
       <!-- Desktop Navigation -->
-      <nav class="hidden md:flex text-[#292c2f] gap-6 items-center">
+      <nav class="hidden md:flex text-[#292c2f] gap-6 items-center justify-start">
         {% for link in linklists['main-menu'].links %}
           {% if link.links != blank %}
             <div class="relative">
