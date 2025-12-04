@@ -1,35 +1,168 @@
+<style>
+  /* Language Switcher Styling */
+  .language-switcher select {
+    background-color: transparent;
+    border: 2px solid #ECC689;
+    border-radius: 9999px;
+    padding: 0.4rem 2rem 0.4rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #292c2f;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%23ECC689' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    transition: all 0.3s ease;
+  }
+
+  @media (min-width: 768px) {
+    .language-switcher select {
+      padding: 0.5rem 2.5rem 0.5rem 1rem;
+      font-size: 0.875rem;
+      background-position: right 0.75rem center;
+    }
+  }
+
+  .language-switcher select:hover {
+    background-color: #ECC689;
+    color: white;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='white' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  }
+
+  .language-switcher select:focus {
+    outline: none;
+    ring: 2px;
+    ring-color: #ECC689;
+  }
+
+  /* Mobile Menu Animation */
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  [data-mobile-menu]:not(.hidden) {
+    animation: slideIn 0.3s ease-out;
+  }
+
+  /* Improve touch targets for mobile */
+  @media (max-width: 767px) {
+    button, a {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
+
+  /* RTL Support */
+  html[dir="rtl"] .language-switcher select {
+    padding: 0.4rem 0.75rem 0.4rem 2rem;
+    background-position: left 0.5rem center;
+  }
+
+  @media (min-width: 768px) {
+    html[dir="rtl"] .language-switcher select {
+      padding: 0.5rem 1rem 0.5rem 2.5rem;
+      background-position: left 0.75rem center;
+    }
+  }
+
+  html[dir="rtl"] nav {
+    flex-direction: row-reverse;
+  }
+
+  html[dir="rtl"] [data-dropdown-menu] {
+    left: auto;
+    right: 50%;
+    transform: translateX(50%);
+  }
+
+  html[dir="rtl"] .ml-4 {
+    margin-left: 0;
+    margin-right: 1rem;
+  }
+
+  html[dir="rtl"] .gap-3 {
+    direction: rtl;
+  }
+
+  @media (max-width: 767px) {
+    .logo img {
+      max-height: 40px;
+    }
+  }
+</style>
+
 <div class="relative bg-transparent shadow font-[lato]">
-  <div class="max-w-6xl mx-auto h-14  md:h-20 ">
-    <div class="h-full px-2 md:p-0 flex items-center justify-between">
-      <div class="logo h-full">
-        <a class="h-full" href="{{  routes.root_url }}">
-          <img class="h-full w-auto" src="{{ shop.brand.logo | image_url}} " width="" height="">
+  <div class="max-w-6xl mx-auto h-16 md:h-20">
+    <div class="h-full px-3 md:px-4 flex items-center justify-between">
+      <!-- Logo -->
+      <div class="logo h-full flex items-center py-2">
+        <a class="h-full flex items-center" href="{{ routes.root_url }}">
+          <img class="h-full w-auto max-h-12 md:max-h-16" src="{{ shop.brand.logo | image_url }}" alt="{{ shop.name }}" width="" height="">
         </a>
       </div>
-      <div class="md:hidden">
-        <button data-mobile-menu-button class="text-[#292c2f] hover:text-gray-400 mr-4">
+
+      <!-- Mobile Menu Button, Cart & Language Switcher -->
+      <div class="flex items-center gap-3 md:hidden mobile-header-actions">
+        <!-- Mobile Cart -->
+        <a href="{{ routes.cart_url }}" class="text-[#292c2f] hover:text-[#ECC689] transition inline-flex items-center relative p-2" aria-label="{{ 'header.cart' | t }}">
+          {% render 'icon-cart' %}
+          {% if cart.item_count > 0 %}
+            <span class="absolute top-0 right-0 bg-[#ECC689] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+              {{ cart.item_count }}
+            </span>
+          {% endif %}
+        </a>
+
+        <!-- Mobile Language Switcher -->
+        {% form 'localization', class: 'language-switcher' %}
+          <select name="locale_code" onchange="this.form.submit()" aria-label="{{ 'header.language_selector' | t }}">
+            {% for locale in localization.available_languages %}
+              <option
+                value="{{ locale.iso_code }}"
+                {% if locale.iso_code == localization.language.iso_code %}
+                  selected
+                {% endif %}
+              >
+                {% if locale.iso_code == 'en' %}EN{% elsif locale.iso_code == 'ar' %}ع{% else %}{{ locale.iso_code | upcase }}{% endif %}
+              </option>
+            {% endfor %}
+          </select>
+        {% endform %}
+
+        <!-- Mobile Menu Button -->
+        <button data-mobile-menu-button class="text-[#292c2f] hover:text-[#ECC689] p-2 transition" aria-label="{{ 'header.menu' | t }}">
           {% render 'icon-menu' %}
         </button>
       </div>
-      <nav class="hidden md:flex text-[#292c2f] gap-4">
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex text-[#292c2f] gap-6 items-center">
         {% for link in linklists['main-menu'].links %}
           {% if link.links != blank %}
             <div class="relative">
               <button
                 data-dropdown-button
-                class="gap-0.5 flex items-end text-xl hover:cursor-pointer {% if link.active==true %}text-[#ECC689]{% endif %}"
+                class="gap-1 flex items-center text-lg hover:cursor-pointer hover:text-[#ECC689] transition {% if link.active %}text-[#ECC689]{% endif %}"
               >
                 {{ link.title }}
                 {% render 'icon-chevron-down' %}
               </button>
               <div
                 data-dropdown-menu
-                class="hidden absolute z-10 mt-5 transform px-2 w-screen max-w-60 sm:px-0 lg:ml-0 lg:left-1/2 lg:-translate-x-1/2 "
+                class="hidden absolute z-10 mt-3 transform px-2 w-screen max-w-60 sm:px-0 lg:ml-0 lg:left-1/2 lg:-translate-x-1/2"
               >
-                <div class="shadow-lg border border-black ring-black ring-opacity-5 overflow-hidden rounded-lg">
-                  <div class="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
+                <div class="shadow-lg border-2 border-[#ECC689] ring-black ring-opacity-5 overflow-hidden rounded-lg">
+                  <div class="relative grid gap-1 bg-white px-3 py-4 sm:gap-6 sm:p-6">
                     {% for sublink in link.links %}
-                      <a href="{{ sublink.url }}" class="-m-3 p-3 flex items-start rounded-lg hover:bg-[#939498]">
+                      <a href="{{ sublink.url }}" class="m-3 p-3 flex items-start rounded-lg hover:bg-[#F9E2A9] transition">
                         <div class="ml-4">
                           <p class="text-base font-medium text-[#292c2f]">{{ sublink.title }}</p>
                         </div>
@@ -40,55 +173,99 @@
               </div>
             </div>
           {% else %}
-            <div class="">
-              <a class="text-xl {% if link.active==true %}text-[#ECC689]{% endif %}" href="{{ link.url }}">
-                {{- link.title -}}
+            <div>
+              <a class="text-lg hover:text-[#ECC689] transition {% if link.active %}text-[#ECC689]{% endif %}" href="{{ link.url }}">
+                {{ link.title }}
               </a>
             </div>
           {% endif %}
         {% endfor %}
       </nav>
-      <div class="hidden md:flex text-xl items-center gap-2">
-        <a href="{{ routes.cart_url }}" class="text-[#292c2f] inline-block">{% render 'icon-cart' %}</a>
+
+      <!-- Desktop Right Side: Cart, Auth, Language -->
+      <div class="hidden md:flex text-lg items-center gap-4">
+        <!-- Cart -->
+        <a href="{{ routes.cart_url }}" class="text-[#292c2f] hover:text-[#ECC689] transition inline-flex items-center relative p-2" aria-label="{{ 'header.cart' | t }}">
+          {% render 'icon-cart' %}
+          {% if cart.item_count > 0 %}
+            <span class="absolute -top-1 -right-1 bg-[#ECC689] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+              {{ cart.item_count }}
+            </span>
+          {% endif %}
+        </a>
+
+        <!-- Account Links -->
         {% if shop.customer_accounts_enabled %}
-          <a href="{{ routes.account_login_url }}" class="text-[#292c2f] inline-block">Login</a>
-          <a href="{{ routes.account_register_url }}" class="text-[#292c2f] inline-block">Register</a>
+          {% if customer %}
+            <a href="{{ routes.account_url }}" class="text-[#292c2f] hover:text-[#ECC689] transition inline-block text-base whitespace-nowrap">
+              {{ 'header.account' | t }}
+            </a>
+            <a href="{{ routes.account_logout_url }}" class="text-[#292c2f] hover:text-[#ECC689] transition inline-block text-base whitespace-nowrap">
+              {{ 'header.logout' | t }}
+            </a>
+          {% else %}
+            <a href="{{ routes.account_login_url }}" class="text-[#292c2f] hover:text-[#ECC689] transition inline-block text-base whitespace-nowrap">
+              {{ 'header.login' | t }}
+            </a>
+            <a href="{{ routes.account_register_url }}" class="text-[#292c2f] hover:text-[#ECC689] transition inline-block text-base whitespace-nowrap">
+              {{ 'header.register' | t }}
+            </a>
+          {% endif %}
         {% endif %}
+
+        <!-- Language Switcher -->
+        {% form 'localization', class: 'language-switcher' %}
+          <select name="locale_code" onchange="this.form.submit()" aria-label="{{ 'header.language_selector' | t }}">
+            {% for locale in localization.available_languages %}
+              <option
+                value="{{ locale.iso_code }}"
+                {% if locale.iso_code == localization.language.iso_code %}
+                  selected
+                {% endif %}
+              >
+                {{ locale.endonym_name }}
+              </option>
+            {% endfor %}
+          </select>
+        {% endform %}
       </div>
     </div>
   </div>
-  <div data-mobile-menu class="hidden absolute z-10 top-0 inset-x-0 p-2 transform origin-top-left md:hidden">
-    <div class="shadow-lg rounded-lg ring-1 ring-black rind-opacit-5 bg-white w-full">
-      <div class="p-5 divide-y-2 divide-gray-50">
-        <div class="flex items-center justify-between pb-3">
+
+  <!-- Mobile Menu Overlay -->
+  <div data-mobile-menu class="hidden fixed z-50 inset-0 bg-black bg-opacity-50 md:hidden" style="backdrop-filter: blur(4px);">
+    <div class="absolute right-0 top-0 h-full w-full max-w-sm bg-white shadow-2xl overflow-y-auto">
+      <div class="p-5">
+        <!-- Mobile Menu Header -->
+        <div class="flex items-center justify-between pb-4 border-b-2 border-gray-100">
           <div>
-            <h1 class="text-lg text-gray-500">Menu</h1>
+            <h2 class="text-xl text-[#ECC689] font-bold">{{ 'header.menu' | t }}</h2>
           </div>
-          <div class="-mr-2">
-            <button data-mobile-menu-close-button class="hover:text-gray-600 text-gray-400 text-2xl">
-              {% render 'icon-close' %}
-            </button>
-          </div>
+          <button data-mobile-menu-close-button class="hover:text-[#ECC689] text-gray-400 text-2xl p-2 transition" aria-label="{{ 'header.close_menu' | t }}">
+            {% render 'icon-close' %}
+          </button>
         </div>
-        <div class="pt-3">
-          <nav class="grid gap-y-7">
+
+        <!-- Mobile Navigation Links -->
+        <div class="py-4">
+          <nav class="grid gap-y-2">
             {% for link in linklists['main-menu'].links %}
               {% if link.links != blank %}
                 <div class="relative">
                   <button
                     data-mobile-submenu-button
-                    class="text-base p-3 -m-3 flex rounded-md items-center justify-between w-full hover:bg-[#939498] text-[#292c2f]"
+                    class="text-base p-4 flex rounded-lg items-center justify-between w-full hover:bg-[#F9E2A9] text-[#292c2f] transition font-medium"
                   >
-                    {{ link.title }}
-                    {% render 'icon-chevron-down' %}
+                    <span>{{ link.title }}</span>
+                    <span class="transform transition-transform duration-200">{% render 'icon-chevron-down' %}</span>
                   </button>
-                  <div data-mobile-submenu-menu class="hidden grid gap-y-7 py-3">
+                  <div data-mobile-submenu-menu class="hidden grid gap-y-1 py-2 pl-4">
                     {% for sublink in link.links %}
                       <a
                         href="{{ sublink.url }}"
-                        class="flex p-3 -m-3 ml-1 items-center rounded-md hover:bg-[#939498] text-[#292c2f]"
+                        class="flex p-3 items-center rounded-lg hover:bg-[#F9E2A9] text-[#292c2f] transition"
                       >
-                        {{- sublink.title -}}
+                        {{ sublink.title }}
                       </a>
                     {% endfor %}
                   </div>
@@ -96,18 +273,124 @@
               {% else %}
                 <a
                   href="{{ link.url }}"
-                  class="flex p-3 -m-3 items-center rounded-md hover:bg-[#939498] text-[#292c2f]"
+                  class="flex p-4 items-center rounded-lg hover:bg-[#F9E2A9] text-[#292c2f] transition font-medium"
                 >
-                  {{- link.title -}}
+                  {{ link.title }}
                 </a>
               {% endif %}
             {% endfor %}
           </nav>
+
+          <!-- Mobile Account Links -->
+          {% if shop.customer_accounts_enabled %}
+            <div class="pt-4 border-t-2 border-gray-100 mt-4">
+              <h3 class="text-sm text-gray-500 font-medium px-4 mb-2">{{ 'header.account' | t }}</h3>
+              {% if customer %}
+                <a href="{{ routes.account_url }}" class="flex p-4 items-center rounded-lg hover:bg-[#F9E2A9] text-[#292c2f] transition">
+                  <span>{{ 'header.my_account' | t }}</span>
+                </a>
+                <a href="{{ routes.account_logout_url }}" class="flex p-4 items-center rounded-lg hover:bg-[#F9E2A9] text-[#292c2f] transition">
+                  <span>{{ 'header.logout' | t }}</span>
+                </a>
+              {% else %}
+                <a href="{{ routes.account_login_url }}" class="flex p-4 items-center rounded-lg hover:bg-[#F9E2A9] text-[#292c2f] transition">
+                  <span>{{ 'header.login' | t }}</span>
+                </a>
+                <a href="{{ routes.account_register_url }}" class="flex p-4 items-center rounded-lg hover:bg-[#F9E2A9] text-[#292c2f] transition">
+                  <span>{{ 'header.register' | t }}</span>
+                </a>
+              {% endif %}
+            </div>
+          {% endif %}
+
+          <!-- Mobile Cart Summary -->
+          <div class="pt-4 border-t-2 border-gray-100 mt-4">
+            <a href="{{ routes.cart_url }}" class="flex p-4 items-center justify-between rounded-lg hover:bg-[#F9E2A9] text-[#292c2f] transition bg-gray-50">
+              <div class="flex items-center gap-3">
+                {% render 'icon-cart' %}
+                <span class="font-medium">{{ 'header.cart' | t }}</span>
+              </div>
+              {% if cart.item_count > 0 %}
+                <span class="bg-[#ECC689] text-white text-sm rounded-full px-3 py-1 font-bold">
+                  {{ cart.item_count }}
+                </span>
+              {% else %}
+                <span class="text-gray-400 text-sm">{{ 'header.empty' | t }}</span>
+              {% endif %}
+            </a>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenu = document.querySelector('[data-mobile-menu]');
+    const body = document.body;
+
+    // ----- MOBILE MENU OPEN/CLOSE -----
+    document.addEventListener('click', function(e) {
+      const menuButton = e.target.closest('[data-mobile-menu-button]');
+      const closeButton = e.target.closest('[data-mobile-menu-close-button]');
+
+      // Open mobile menu
+      if (menuButton && mobileMenu) {
+        mobileMenu.classList.remove('hidden');
+        body.style.overflow = 'hidden';
+        return;
+      }
+
+      // Close mobile menu
+      if (closeButton && mobileMenu) {
+        mobileMenu.classList.add('hidden');
+        body.style.overflow = '';
+        return;
+      }
+
+      // Close when clicking on overlay
+      if (mobileMenu && e.target === mobileMenu) {
+        mobileMenu.classList.add('hidden');
+        body.style.overflow = '';
+      }
+    });
+
+    // ----- MOBILE SUBMENU TOGGLE -----
+    document.addEventListener('click', function(e) {
+      const submenuButton = e.target.closest('[data-mobile-submenu-button]');
+      if (!submenuButton) return;
+
+      const submenu = submenuButton.nextElementSibling;
+      const chevron = submenuButton.querySelector('span:last-child');
+
+      if (submenu) {
+        submenu.classList.toggle('hidden');
+        if (chevron) {
+          chevron.style.transform = submenu.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
+        }
+      }
+    });
+
+    // ----- DESKTOP DROPDOWN TOGGLE -----
+    document.addEventListener('click', function(e) {
+      const dropdownButton = e.target.closest('[data-dropdown-button]');
+      const dropdowns = document.querySelectorAll('[data-dropdown-menu]');
+
+      if (dropdownButton) {
+        const dropdown = dropdownButton.nextElementSibling;
+        if (dropdown) dropdown.classList.toggle('hidden');
+
+        // Close other dropdowns
+        dropdowns.forEach(menu => {
+          if (menu !== dropdown) menu.classList.add('hidden');
+        });
+      } else {
+        // Close all dropdowns if clicked outside
+        dropdowns.forEach(menu => menu.classList.add('hidden'));
+      }
+    });
+  });
+</script>
 
 {% schema %}
 {

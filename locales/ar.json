@@ -1,4 +1,14 @@
 {
+  "header": {
+    "menu": "القائمة",
+    "close_menu": "إغلاق القائمة",
+    "cart": "السلة",
+    "account": "الحساب",
+    "login": "تسجيل الدخول",
+    "register": "إنشاء حساب",
+    "logout": "تسجيل الخروج",
+    "language_selector": "اختر اللغة"
+  },
   "homepage": {
     "new_arrivals": "وصل حديثاً",
     "shop_all": "تسوق الكل",

@@ -1,4 +1,14 @@
 {
+  "header": {
+    "menu": "Menu",
+    "close_menu": "Close menu",
+    "cart": "Cart",
+    "account": "Account",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "language_selector": "Select language"
+  },
   "homepage": {
     "new_arrivals": "New Arrivals",
     "shop_all": "Shop all",
