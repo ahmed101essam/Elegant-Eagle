@@ -14,5 +14,19 @@
     "shop_all": "تسوق الكل",
     "newsletter_placeholder": "أدخل بريدك الإلكتروني",
     "subscribe": "اشترك"
+  },
+  "product": {
+    "shopping_cart": "سلة التسوق",
+    "subtotal": "المجموع الفرعي",
+    "view_cart": "عرض السلة",
+    "checkout": "الدفع",
+    "cart_empty": "سلة التسوق فارغة",
+    "quantity": "الكمية",
+    "qty": "الكمية",
+    "add_to_cart": "أضف إلى السلة",
+    "sold_out": "نفذت الكمية",
+    "continue_shopping": "متابعة التسوق",
+    "add_to_cart_error": "فشل في إضافة المنتج إلى السلة",
+    "add_to_cart_error_message": "حدث خطأ أثناء الإضافة إلى السلة"
   }
 }

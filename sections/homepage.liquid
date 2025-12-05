@@ -27,29 +27,48 @@
   }
 </style>
 
-<div class="max-w-6xl mx-auto">
+{% assign is_rtl = false %}
+{% if request.locale.iso_code == 'ar' %}
+  {% assign is_rtl = true %}
+{% endif %}
+
+<div class="max-w-6xl mx-auto" dir="{% if is_rtl %}rtl{% else %}ltr{% endif %}">
   <!-- Hero Section -->
   <div
     class="hero h-48 md:h-96 mt-12 p-2"
-    style="{% if section.settings.background_image %}background-image: url('{{ section.settings.background_image | image_url: width: 1920 }}'); background-size: cover; background-position: center;{% endif %}"
+    style="{% if is_rtl %}{% if section.settings.background_image_ar %}background-image: url('{{ section.settings.background_image_ar | image_url: width: 1920 }}');{% endif %}{% else %}{% if section.settings.background_image_en %}background-image: url('{{ section.settings.background_image_en | image_url: width: 1920 }}');{% endif %}{% endif %} background-size: cover; background-position: center;"
   >
     <div class="h-full border-double border-6 border-[#ECC689] p-2 md:p-6 flex flex-col gap-1 md:gap-2 justify-end">
       <h2 class="text-md md:text-4xl m-0 font-[raleway] font-bold md:font-medium">
-        {{ section.settings.heading }}
+        {% if is_rtl %}
+          {{ section.settings.heading_ar }}
+        {% else %}
+          {{ section.settings.heading_en }}
+        {% endif %}
       </h2>
-      <p class="text-lg md:text-xl">{{ section.settings.subheading }}</p>
+      <p class="text-lg md:text-xl">
+        {% if is_rtl %}
+          {{ section.settings.subheading_ar }}
+        {% else %}
+          {{ section.settings.subheading_en }}
+        {% endif %}
+      </p>
       <a
         class="block mt-1 py-0.5 px-3 text-lg md:py-2 md:px-8 md:text-xl w-fit rounded-full text-white font-medium cursor-pointer bg-[#ECC689] hover:bg-[#F9E2A9]"
         href="{{ section.settings.button_link }}"
       >
-        {{- section.settings.button_text -}}
+        {%- if is_rtl -%}
+          {{ section.settings.button_text_ar }}
+        {%- else -%}
+          {{ section.settings.button_text_en }}
+        {%- endif -%}
       </a>
     </div>
   </div>
 
   <!-- New Arrivals Section -->
   <div class="new-collection mt-20">
-    <h3 class="text-3xl my-3 text-center text-[#ECC689]">New Arrivals</h3>
+    <h3 class="text-3xl my-3 text-center text-[#ECC689]">{{ 'homepage.new_arrivals' | t }}</h3>
 
     {% assign new_products = collections.all.products | sort: 'created_at' | reverse | limit: 8 %}
     <div class="new-products swiper newProductsSwiper">
@@ -87,12 +106,18 @@
     <a
       href="{{ routes.all_products_collection_url }}"
       class="bg-[#ecc689] text-white px-4 py-2 font-medium rounded-full hover:bg-[#F9E2A9] transition"
-    >Shop all</a>
+    >{{ 'homepage.shop_all' | t }}</a>
   </div>
 
   <!-- Featured Collections Section -->
   <div class="featured-collections mt-20 px-3">
-    <h3 class="text-3xl my-8 text-center text-[#ECC689]">{{ section.settings.collections_heading }}</h3>
+    <h3 class="text-3xl my-8 text-center text-[#ECC689]">
+      {% if is_rtl %}
+        {{ section.settings.collections_heading_ar }}
+      {% else %}
+        {{ section.settings.collections_heading_en }}
+      {% endif %}
+    </h3>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       {% if section.settings.collection_1 != blank %}
         <a href="{{ collections[section.settings.collection_1].url }}" class="group">
@@ -144,30 +169,72 @@
   <!-- About/Values Section -->
   <div class="values-section mt-20 px-3">
     <div class="border-double border-4 border-[#ECC689] p-6 md:p-12">
-      <h3 class="text-3xl text-center text-[#ECC689] mb-8">{{ section.settings.values_heading }}</h3>
+      <h3 class="text-3xl text-center text-[#ECC689] mb-8">
+        {% if is_rtl %}
+          {{ section.settings.values_heading_ar }}
+        {% else %}
+          {{ section.settings.values_heading_en }}
+        {% endif %}
+      </h3>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div class="text-center">
           <div class="border border-[#ECC689] rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
             <span class="text-2xl text-[#ECC689]">✦</span>
           </div>
-          <h4 class="text-xl font-medium mb-2 text-[#ECC689]">{{ section.settings.value_1_title }}</h4>
-          <p class="text-gray-600">{{ section.settings.value_1_text }}</p>
+          <h4 class="text-xl font-medium mb-2 text-[#ECC689]">
+            {% if is_rtl %}
+              {{ section.settings.value_1_title_ar }}
+            {% else %}
+              {{ section.settings.value_1_title_en }}
+            {% endif %}
+          </h4>
+          <p class="text-gray-600">
+            {% if is_rtl %}
+              {{ section.settings.value_1_text_ar }}
+            {% else %}
+              {{ section.settings.value_1_text_en }}
+            {% endif %}
+          </p>
         </div>
         
         <div class="text-center">
           <div class="border border-[#ECC689] rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
             <span class="text-2xl text-[#ECC689]">✦</span>
           </div>
-          <h4 class="text-xl font-medium mb-2 text-[#ECC689]">{{ section.settings.value_2_title }}</h4>
-          <p class="text-gray-600">{{ section.settings.value_2_text }}</p>
+          <h4 class="text-xl font-medium mb-2 text-[#ECC689]">
+            {% if is_rtl %}
+              {{ section.settings.value_2_title_ar }}
+            {% else %}
+              {{ section.settings.value_2_title_en }}
+            {% endif %}
+          </h4>
+          <p class="text-gray-600">
+            {% if is_rtl %}
+              {{ section.settings.value_2_text_ar }}
+            {% else %}
+              {{ section.settings.value_2_text_en }}
+            {% endif %}
+          </p>
         </div>
         
         <div class="text-center">
           <div class="border border-[#ECC689] rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
             <span class="text-2xl text-[#ECC689]">✦</span>
           </div>
-          <h4 class="text-xl font-medium mb-2 text-[#ECC689]">{{ section.settings.value_3_title }}</h4>
-          <p class="text-gray-600">{{ section.settings.value_3_text }}</p>
+          <h4 class="text-xl font-medium mb-2 text-[#ECC689]">
+            {% if is_rtl %}
+              {{ section.settings.value_3_title_ar }}
+            {% else %}
+              {{ section.settings.value_3_title_en }}
+            {% endif %}
+          </h4>
+          <p class="text-gray-600">
+            {% if is_rtl %}
+              {{ section.settings.value_3_text_ar }}
+            {% else %}
+              {{ section.settings.value_3_text_en }}
+            {% endif %}
+          </p>
         </div>
       </div>
     </div>
@@ -175,32 +242,74 @@
 
   <!-- Testimonials Section -->
   <div class="testimonials mt-20 px-3 mb-20">
-    <h3 class="text-3xl my-8 text-center text-[#ECC689]">{{ section.settings.testimonials_heading }}</h3>
+    <h3 class="text-3xl my-8 text-center text-[#ECC689]">
+      {% if is_rtl %}
+        {{ section.settings.testimonials_heading_ar }}
+      {% else %}
+        {{ section.settings.testimonials_heading_en }}
+      {% endif %}
+    </h3>
     <div class="swiper testimonialsSwiper">
       <div class="swiper-wrapper">
-        {% if section.settings.testimonial_1_text != blank %}
+        {% if section.settings.testimonial_1_text_en != blank or section.settings.testimonial_1_text_ar != blank %}
           <div class="swiper-slide">
             <div class="border-double border-4 border-[#ECC689] p-6 md:p-8 h-full">
-              <p class="text-lg italic mb-4">"{{ section.settings.testimonial_1_text }}"</p>
-              <p class="text-[#ECC689] font-medium">— {{ section.settings.testimonial_1_author }}</p>
+              <p class="text-lg italic mb-4">"
+                {%- if is_rtl -%}
+                  {{ section.settings.testimonial_1_text_ar }}
+                {%- else -%}
+                  {{ section.settings.testimonial_1_text_en }}
+                {%- endif -%}
+              "</p>
+              <p class="text-[#ECC689] font-medium">— 
+                {%- if is_rtl -%}
+                  {{ section.settings.testimonial_1_author_ar }}
+                {%- else -%}
+                  {{ section.settings.testimonial_1_author_en }}
+                {%- endif -%}
+              </p>
             </div>
           </div>
         {% endif %}
         
-        {% if section.settings.testimonial_2_text != blank %}
+        {% if section.settings.testimonial_2_text_en != blank or section.settings.testimonial_2_text_ar != blank %}
           <div class="swiper-slide">
             <div class="border-double border-4 border-[#ECC689] p-6 md:p-8 h-full">
-              <p class="text-lg italic mb-4">"{{ section.settings.testimonial_2_text }}"</p>
-              <p class="text-[#ECC689] font-medium">— {{ section.settings.testimonial_2_author }}</p>
+              <p class="text-lg italic mb-4">"
+                {%- if is_rtl -%}
+                  {{ section.settings.testimonial_2_text_ar }}
+                {%- else -%}
+                  {{ section.settings.testimonial_2_text_en }}
+                {%- endif -%}
+              "</p>
+              <p class="text-[#ECC689] font-medium">— 
+                {%- if is_rtl -%}
+                  {{ section.settings.testimonial_2_author_ar }}
+                {%- else -%}
+                  {{ section.settings.testimonial_2_author_en }}
+                {%- endif -%}
+              </p>
             </div>
           </div>
         {% endif %}
         
-        {% if section.settings.testimonial_3_text != blank %}
+        {% if section.settings.testimonial_3_text_en != blank or section.settings.testimonial_3_text_ar != blank %}
           <div class="swiper-slide">
             <div class="border-double border-4 border-[#ECC689] p-6 md:p-8 h-full">
-              <p class="text-lg italic mb-4">"{{ section.settings.testimonial_3_text }}"</p>
-              <p class="text-[#ECC689] font-medium">— {{ section.settings.testimonial_3_author }}</p>
+              <p class="text-lg italic mb-4">"
+                {%- if is_rtl -%}
+                  {{ section.settings.testimonial_3_text_ar }}
+                {%- else -%}
+                  {{ section.settings.testimonial_3_text_en }}
+                {%- endif -%}
+              "</p>
+              <p class="text-[#ECC689] font-medium">— 
+                {%- if is_rtl -%}
+                  {{ section.settings.testimonial_3_author_ar }}
+                {%- else -%}
+                  {{ section.settings.testimonial_3_author_en }}
+                {%- endif -%}
+              </p>
             </div>
           </div>
         {% endif %}
@@ -214,14 +323,26 @@
   <!-- Newsletter Section -->
   <div class="newsletter mt-20 mb-20 px-3">
     <div class="border-double border-4 border-[#ECC689] p-8 md:p-12 text-center">
-      <h3 class="text-3xl text-[#ECC689] mb-4">{{ section.settings.newsletter_heading }}</h3>
-      <p class="text-lg mb-6">{{ section.settings.newsletter_text }}</p>
+      <h3 class="text-3xl text-[#ECC689] mb-4">
+        {% if is_rtl %}
+          {{ section.settings.newsletter_heading_ar }}
+        {% else %}
+          {{ section.settings.newsletter_heading_en }}
+        {% endif %}
+      </h3>
+      <p class="text-lg mb-6">
+        {% if is_rtl %}
+          {{ section.settings.newsletter_text_ar }}
+        {% else %}
+          {{ section.settings.newsletter_text_en }}
+        {% endif %}
+      </p>
       <form action="/contact#newsletter" method="post" class="flex flex-col md:flex-row gap-3 max-w-lg mx-auto">
         <input type="hidden" name="contact[tags]" value="newsletter">
         <input
           type="email"
           name="contact[email]"
-          placeholder="Enter your email"
+          placeholder="{{ 'homepage.newsletter_placeholder' | t }}"
           required
           class="flex-1 px-4 py-2 border border-[#ECC689] rounded-full focus:outline-none focus:ring-2 focus:ring-[#ECC689]"
         >
@@ -229,7 +350,7 @@
           type="submit"
           class="bg-[#ecc689] text-white px-6 py-2 font-medium rounded-full hover:bg-[#F9E2A9] transition"
         >
-          Subscribe
+          {{ 'homepage.subscribe' | t }}
         </button>
       </form>
     </div>
@@ -238,9 +359,12 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {
+    const isRTL = '{{ request.locale.iso_code }}' === 'ar';
+    
     new Swiper('.newProductsSwiper', {
       slidesPerView: 1.2,
       spaceBetween: 16,
+      rtl: isRTL,
       navigation: {
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev',
@@ -268,6 +392,7 @@
     new Swiper('.testimonialsSwiper', {
       slidesPerView: 1,
       spaceBetween: 24,
+      rtl: isRTL,
       navigation: {
         nextEl: '.swiper-button-next',
         prevEl: '.swiper-button-prev',
@@ -292,178 +417,297 @@
 
 {% schema %}
 {
-  "name": "Complete Homepage",
+  "name": "t:sections.homepage.name",
   "settings": [
     {
       "type": "header",
-      "content": "Hero Section"
+      "content": "t:sections.homepage.settings.hero_section.content"
     },
     {
       "type": "image_picker",
-      "id": "background_image",
-      "label": "Background Image"
+      "id": "background_image_en",
+      "label": "t:sections.homepage.settings.background_image_en.label"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_ar",
+      "label": "t:sections.homepage.settings.background_image_ar.label"
     },
     {
       "type": "text",
-      "id": "heading",
-      "label": "Heading",
+      "id": "heading_en",
+      "label": "t:sections.homepage.settings.heading_en.label",
       "default": "Discover Timeless Elegance"
     },
     {
       "type": "text",
-      "id": "subheading",
-      "label": "Subheading",
+      "id": "heading_ar",
+      "label": "t:sections.homepage.settings.heading_ar.label",
+      "default": "اكتشف الأناقة الخالدة"
+    },
+    {
+      "type": "text",
+      "id": "subheading_en",
+      "label": "t:sections.homepage.settings.subheading_en.label",
       "default": "Luxury meets sophistication"
     },
     {
       "type": "text",
-      "id": "button_text",
-      "label": "Button Text",
+      "id": "subheading_ar",
+      "label": "t:sections.homepage.settings.subheading_ar.label",
+      "default": "الفخامة تلتقي بالرقي"
+    },
+    {
+      "type": "text",
+      "id": "button_text_en",
+      "label": "t:sections.homepage.settings.button_text_en.label",
       "default": "Shop Collection"
+    },
+    {
+      "type": "text",
+      "id": "button_text_ar",
+      "label": "t:sections.homepage.settings.button_text_ar.label",
+      "default": "تسوق المجموعة"
     },
     {
       "type": "url",
       "id": "button_link",
-      "label": "Button Link",
+      "label": "t:sections.homepage.settings.button_link.label",
       "default": "/collections/all"
     },
     {
       "type": "header",
-      "content": "Featured Collections"
+      "content": "t:sections.homepage.settings.featured_collections.content"
     },
     {
       "type": "text",
-      "id": "collections_heading",
-      "label": "Collections Heading",
+      "id": "collections_heading_en",
+      "label": "t:sections.homepage.settings.collections_heading_en.label",
       "default": "Shop By Category"
+    },
+    {
+      "type": "text",
+      "id": "collections_heading_ar",
+      "label": "t:sections.homepage.settings.collections_heading_ar.label",
+      "default": "تسوق حسب الفئة"
     },
     {
       "type": "collection",
       "id": "collection_1",
-      "label": "Collection 1"
+      "label": "t:sections.homepage.settings.collection_1.label"
     },
     {
       "type": "collection",
       "id": "collection_2",
-      "label": "Collection 2"
+      "label": "t:sections.homepage.settings.collection_2.label"
     },
     {
       "type": "collection",
       "id": "collection_3",
-      "label": "Collection 3"
+      "label": "t:sections.homepage.settings.collection_3.label"
     },
     {
       "type": "header",
-      "content": "Values Section"
+      "content": "t:sections.homepage.settings.values_section.content"
     },
     {
       "type": "text",
-      "id": "values_heading",
-      "label": "Values Heading",
+      "id": "values_heading_en",
+      "label": "t:sections.homepage.settings.values_heading_en.label",
       "default": "Why Choose Us"
     },
     {
       "type": "text",
-      "id": "value_1_title",
-      "label": "Value 1 Title",
+      "id": "values_heading_ar",
+      "label": "t:sections.homepage.settings.values_heading_ar.label",
+      "default": "لماذا تختارنا"
+    },
+    {
+      "type": "text",
+      "id": "value_1_title_en",
+      "label": "t:sections.homepage.settings.value_1_title_en.label",
       "default": "Premium Quality"
     },
     {
+      "type": "text",
+      "id": "value_1_title_ar",
+      "label": "t:sections.homepage.settings.value_1_title_ar.label",
+      "default": "جودة عالية"
+    },
+    {
       "type": "textarea",
-      "id": "value_1_text",
-      "label": "Value 1 Text",
+      "id": "value_1_text_en",
+      "label": "t:sections.homepage.settings.value_1_text_en.label",
       "default": "Handpicked materials and expert craftsmanship in every piece"
     },
     {
+      "type": "textarea",
+      "id": "value_1_text_ar",
+      "label": "t:sections.homepage.settings.value_1_text_ar.label",
+      "default": "مواد منتقاة بعناية وحرفية متقنة في كل قطعة"
+    },
+    {
       "type": "text",
-      "id": "value_2_title",
-      "label": "Value 2 Title",
+      "id": "value_2_title_en",
+      "label": "t:sections.homepage.settings.value_2_title_en.label",
       "default": "Timeless Design"
     },
     {
+      "type": "text",
+      "id": "value_2_title_ar",
+      "label": "t:sections.homepage.settings.value_2_title_ar.label",
+      "default": "تصميم خالد"
+    },
+    {
       "type": "textarea",
-      "id": "value_2_text",
-      "label": "Value 2 Text",
+      "id": "value_2_text_en",
+      "label": "t:sections.homepage.settings.value_2_text_en.label",
       "default": "Classic styles that transcend trends and last for years"
     },
     {
+      "type": "textarea",
+      "id": "value_2_text_ar",
+      "label": "t:sections.homepage.settings.value_2_text_ar.label",
+      "default": "تصاميم كلاسيكية تتجاوز الموضة وتدوم لسنوات"
+    },
+    {
       "type": "text",
-      "id": "value_3_title",
-      "label": "Value 3 Title",
+      "id": "value_3_title_en",
+      "label": "t:sections.homepage.settings.value_3_title_en.label",
       "default": "Exceptional Service"
     },
     {
+      "type": "text",
+      "id": "value_3_title_ar",
+      "label": "t:sections.homepage.settings.value_3_title_ar.label",
+      "default": "خدمة استثنائية"
+    },
+    {
       "type": "textarea",
-      "id": "value_3_text",
-      "label": "Value 3 Text",
+      "id": "value_3_text_en",
+      "label": "t:sections.homepage.settings.value_3_text_en.label",
       "default": "Dedicated support and care for every customer"
     },
     {
+      "type": "textarea",
+      "id": "value_3_text_ar",
+      "label": "t:sections.homepage.settings.value_3_text_ar.label",
+      "default": "دعم ورعاية مخصصة لكل عميل"
+    },
+    {
       "type": "header",
-      "content": "Testimonials"
+      "content": "t:sections.homepage.settings.testimonials.content"
     },
     {
       "type": "text",
-      "id": "testimonials_heading",
-      "label": "Testimonials Heading",
+      "id": "testimonials_heading_en",
+      "label": "t:sections.homepage.settings.testimonials_heading_en.label",
       "default": "What Our Customers Say"
     },
     {
+      "type": "text",
+      "id": "testimonials_heading_ar",
+      "label": "t:sections.homepage.settings.testimonials_heading_ar.label",
+      "default": "ماذا يقول عملاؤنا"
+    },
+    {
       "type": "textarea",
-      "id": "testimonial_1_text",
-      "label": "Testimonial 1 Text",
+      "id": "testimonial_1_text_en",
+      "label": "t:sections.homepage.settings.testimonial_1_text_en.label",
       "default": "Absolutely stunning quality! Every piece I've purchased has exceeded my expectations."
     },
     {
+      "type": "textarea",
+      "id": "testimonial_1_text_ar",
+      "label": "t:sections.homepage.settings.testimonial_1_text_ar.label",
+      "default": "جودة رائعة حقاً! كل قطعة اشتريتها فاقت توقعاتي."
+    },
+    {
       "type": "text",
-      "id": "testimonial_1_author",
-      "label": "Testimonial 1 Author",
+      "id": "testimonial_1_author_en",
+      "label": "t:sections.homepage.settings.testimonial_1_author_en.label",
       "default": "Sarah M."
     },
     {
+      "type": "text",
+      "id": "testimonial_1_author_ar",
+      "label": "t:sections.homepage.settings.testimonial_1_author_ar.label",
+      "default": "سارة م."
+    },
+    {
       "type": "textarea",
-      "id": "testimonial_2_text",
-      "label": "Testimonial 2 Text",
+      "id": "testimonial_2_text_en",
+      "label": "t:sections.homepage.settings.testimonial_2_text_en.label",
       "default": "The attention to detail is remarkable. I always receive compliments on my purchases."
     },
     {
+      "type": "textarea",
+      "id": "testimonial_2_text_ar",
+      "label": "t:sections.homepage.settings.testimonial_2_text_ar.label",
+      "default": "الاهتمام بالتفاصيل رائع. أتلقى دائماً إطراءات على مشترياتي."
+    },
+    {
       "type": "text",
-      "id": "testimonial_2_author",
-      "label": "Testimonial 2 Author",
+      "id": "testimonial_2_author_en",
+      "label": "t:sections.homepage.settings.testimonial_2_author_en.label",
       "default": "James L."
     },
     {
+      "type": "text",
+      "id": "testimonial_2_author_ar",
+      "label": "t:sections.homepage.settings.testimonial_2_author_ar.label",
+      "default": "جيمس ل."
+    },
+    {
       "type": "textarea",
-      "id": "testimonial_3_text",
-      "label": "Testimonial 3 Text",
+      "id": "testimonial_3_text_en",
+      "label": "t:sections.homepage.settings.testimonial_3_text_en.label",
       "default": "Beautiful designs and exceptional customer service. My go-to for elegant pieces."
     },
     {
+      "type": "textarea",
+      "id": "testimonial_3_text_ar",
+      "label": "t:sections.homepage.settings.testimonial_3_text_ar.label",
+      "default": "تصاميم جميلة وخدمة عملاء استثنائية. وجهتي المفضلة للقطع الأنيقة."
+    },
+    {
       "type": "text",
-      "id": "testimonial_3_author",
-      "label": "Testimonial 3 Author",
+      "id": "testimonial_3_author_en",
+      "label": "t:sections.homepage.settings.testimonial_3_author_en.label",
       "default": "Emily R."
     },
     {
+      "type": "text",
+      "id": "testimonial_3_author_ar",
+      "label": "t:sections.homepage.settings.testimonial_3_author_ar.label",
+      "default": "إيميلي ر."
+    },
+    {
       "type": "header",
-      "content": "Newsletter"
+      "content": "t:sections.homepage.settings.newsletter.content"
     },
     {
       "type": "text",
-      "id": "newsletter_heading",
-      "label": "Newsletter Heading",
+      "id": "newsletter_heading_en",
+      "label": "t:sections.homepage.settings.newsletter_heading_en.label",
       "default": "Stay Connected"
     },
     {
       "type": "text",
-      "id": "newsletter_text",
-      "label": "Newsletter Text",
-      "default": "Subscribe to receive exclusive offers and updates"
-    }
-  ],
-  "presets": [
+      "id": "newsletter_heading_ar",
+      "label": "t:sections.homepage.settings.newsletter_heading_ar.label",
+      "default": "ابق على تواصل"
+    },
     {
-      "name": "Complete Homepage"
+      "type": "text",
+      "id": "newsletter_text_en",
+      "label": "t:sections.homepage.settings.newsletter_text_en.label",
+      "default": "Subscribe to receive exclusive offers and updates"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_text_ar",
+      "label": "t:sections.homepage.settings.newsletter_text_ar.label"
     }
   ]
 }

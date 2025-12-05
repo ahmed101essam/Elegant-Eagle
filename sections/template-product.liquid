@@ -8,27 +8,118 @@
   input[type='number'] {
     -moz-appearance: textfield;
   }
+
+  .cart-drawer {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    max-width: 400px;
+    height: 100vh;
+    background: white;
+    box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+    transition: right 0.3s ease;
+    z-index: 1000;
+    overflow-y: auto;
+  }
+
+  .cart-drawer.open {
+    right: 0;
+  }
+
+  .cart-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0,0,0,0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 999;
+  }
+
+  .cart-overlay.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* RTL Support */
+  [dir="rtl"] .cart-drawer {
+    right: auto;
+    left: -100%;
+  }
+
+  [dir="rtl"] .cart-drawer.open {
+    right: auto;
+    left: 0;
+  }
+
+  [dir="rtl"] .product-info p.absolute {
+    right: auto;
+    left: 0;
+    transform: rotate(90deg) translateX(-25%);
+  }
 </style>
-<div class="max-w-6xl mx-auto m-0 md:my-8">
+
+<script>
+  const productVariants = {{ product.variants | json }};
+  const productJSON = {{ product | json }};
+  const currentLocale = '{{ request.locale.iso_code }}' || 'en';
+  const isRTL = currentLocale === 'ar';
+  
+  // Translations from Liquid
+  const translations = {
+    shopping_cart: {{ 'product.shopping_cart' | t | json }},
+    subtotal: {{ 'product.subtotal' | t | json }},
+    view_cart: {{ 'product.view_cart' | t | json }},
+    checkout: {{ 'product.checkout' | t | json }},
+    cart_empty: {{ 'product.cart_empty' | t | json }},
+    quantity: {{ 'product.quantity' | t | json }},
+    qty: {{ 'product.qty' | t | json }},
+    add_to_cart: {{ 'product.add_to_cart' | t | json }},
+    sold_out: {{ 'product.sold_out' | t | json }},
+    continue_shopping: {{ 'product.continue_shopping' | t | json }},
+    add_to_cart_error: {{ 'product.add_to_cart_error' | t | json }},
+    add_to_cart_error_message: {{ 'product.add_to_cart_error_message' | t | json }}
+  };
+</script>
+
+{% assign is_rtl = false %}
+{% if request.locale.iso_code == 'ar' %}
+  {% assign is_rtl = true %}
+{% endif %}
+
+<div class="max-w-6xl mx-auto m-0 md:my-8" dir="{% if is_rtl %}rtl{% else %}ltr{% endif %}">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
     <div class="product-medias h-[500px] slider relative w-sm m-auto">
-      <div class="flex list absolute top-0 left-0 w-full h-full overflow-hidden">
+      <div class="flex list absolute top-0 {% if is_rtl %}right{% else %}left{% endif %}-0 w-full h-full overflow-hidden">
         {% for media in product.media %}
-          <div class="item h-auto min-w-full">
+          <div class="item h-auto min-w-full" data-media-id="{{ media.id }}">
             {% render 'product-media', media: media %}
           </div>
         {% endfor %}
       </div>
       <div class="absolute top-1/2 buttons text-white flex w-full justify-between items-center">
-        <button id="prev" class="block bg-gray-300  rounded-full flex items-center justify-center p-1">
-          {% render 'icon-prev' %}
-        </button>
-        <button id="next" class="block bg-gray-300 rounded-full flex items-center justify-center p-1">
-          {% render 'icon-next' %}
-        </button>
+        {% if is_rtl %}
+          <button id="next" class="block bg-gray-300 rounded-full flex items-center justify-center p-1">
+            {% render 'icon-next' %}
+          </button>
+          <button id="prev" class="block bg-gray-300 rounded-full flex items-center justify-center p-1">
+            {% render 'icon-prev' %}
+          </button>
+        {% else %}
+          <button id="prev" class="block bg-gray-300 rounded-full flex items-center justify-center p-1">
+            {% render 'icon-prev' %}
+          </button>
+          <button id="next" class="block bg-gray-300 rounded-full flex items-center justify-center p-1">
+            {% render 'icon-next' %}
+          </button>
+        {% endif %}
       </div>
 
-      <div class="absolute flex  justify-center left-1/2 -translate-x-1/2 translate-y-1 items-center top-full gap-2">
+      <div class="absolute flex justify-center left-1/2 -translate-x-1/2 translate-y-1 items-center top-full gap-2">
         {% for media in product.media %}
           <button
             data-index="{{ forloop.index0 }}"
@@ -38,31 +129,32 @@
       </div>
     </div>
     <div class="product-info relative p-4 sm:p-0">
-      {% form 'product', product %}
-        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-        <p class="absolute -rotate-90 right-0 top-2/12 translate-x-1/4 font-black m-0 p-0 text-4xl">
-          {{ product.category }}
-        </p>
+      <form id="product-form">
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" id="variant-id">
+        
         <div class="basic-info border-b-2 pb-3 border-[#939498]">
           <h2 class="text-3xl text-[#292c2f] font-bold">{{ product.title }}</h2>
-          <div class="flex gap-3 my-2">
-            <p class="{% if product.price != product.compare_at_price  %} {% if product.compare_at_price>0 %}line-through{% endif %}{% endif %} text-2xl text-[#292c2f] font-bold">
+          <div class="flex gap-3 my-2" id="price-container">
+            <p id="current-price" class="{% if product.compare_at_price > product.price %}line-through{% endif %} text-2xl text-[#292c2f] font-bold">
               {{ product.price | money }}
             </p>
-            {% if product.price != product.compare_at_price %}
-              <p class="text-2xl text-[#292c2f] font-bold">
+            {% if product.compare_at_price > product.price %}
+              <p id="compare-price" class="text-2xl text-[#292c2f] font-bold">
                 {{ product.compare_at_price | money }}
               </p>
             {% endif %}
           </div>
           <p class="text-[#939498] my-3">{{ product.description }}</p>
         </div>
-        <div class="my-3 border-b-2 border-[#939498]">
+        <div class="my-3 border-b-2 border-[#939498] relative min-h-30">
+          <p class="absolute  {% if is_rtl %}left-0 -translate-x-1/4 -rotate-180{% else %}right-0 translate-x-1/4 -rotate-90{% endif %} top-2/12 font-black m-0 p-0 text-4xl">
+            {{ product.type }}
+          </p>
           {% unless product.has_only_default_variant %}
             <div data-url="{{ product.url }}" data-section="{{ section.id }}">
               {% for option in product.options_with_values %}
                 <label class="block mb-1 text-[#292c2f] font-medium">{{ option.name }}</label>
-                <div class="flex flex-wrap gap-2 mb-4" data-option-index="{{ forloop.index0 }}">
+                <div class="flex flex-wrap gap-2 mb-4" data-option-index="{{ forloop.index0 }}" data-option-name="{{ option.name | escape }}">
                   {% for value in option.values %}
                     <button
                       type="button"
@@ -73,16 +165,13 @@
                     </button>
                   {% endfor %}
                 </div>
-                <input
-                  type="hidden"
-                  name="options[{{ option.name | escape }}]"
-                  id="Option-{{ section.id }}-{{ forloop.index0 }}"
-                >
               {% endfor %}
             </div>
           {% endunless %}
           <div class="my-3">
-            <label class="block mb-1 text-[#292c2f] font-medium">Quantity</label>
+            <label class="block mb-1 text-[#292c2f] font-medium">
+              {{ 'product.quantity' | t }}
+            </label>
             <div class="flex items-center">
               <button type="button" class="btn-minus bg-[#ECC689] hover:bg-[#f9e2a9] rounded-full p-0.5">
                 {% render 'icon-minus' %}
@@ -92,7 +181,6 @@
                 name="quantity"
                 value="1"
                 min="1"
-                disabled
                 class="w-12 text-center border border-[#ECC689] mx-2 rounded-sm"
               >
               <button type="button" class="btn-plus bg-[#ECC689] hover:bg-[#f9e2a9] rounded-full p-0.5">
@@ -104,29 +192,57 @@
         <div>
           <button
             type="submit"
-            class="w-full bg-[#292c2f] text-white py-3 rounded-sm hover:bg-[#3c4043] transition font-medium"
+            id="add-to-cart-btn"
+            class="w-full bg-[#292c2f] text-white py-3 rounded-sm hover:bg-[#3c4043] transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             {% unless product.selected_or_first_available_variant.available %}
               disabled
             {% endunless %}
           >
             {% if product.selected_or_first_available_variant.available == false %}
-              Sold Out
+              {{ 'product.sold_out' | t }}
             {% else %}
-              Add to Cart
+              {{ 'product.add_to_cart' | t }}
             {% endif %}
           </button>
-          <a class="text-[#ECC689] flex items-end gap-0.5 mt-3" href="{{ routes.all_products_collection_url }}"
-            ><span>Continue Shopping</span>
-            <span class="flex items-end justify-center p-0">{% render 'icon-right-arrow' -%}</span>
+          <a class="text-[#ECC689] flex items-end gap-0.5 mt-3" href="{{ routes.all_products_collection_url }}">
+            <span>{{ 'product.continue_shopping' | t }}</span>
+            <span class="flex items-end justify-center p-0">{% if is_rtl %}{% render 'icon-left-arrow' %}{%else%}{% render 'icon-right-arrow' %}{% endif %}</span>
           </a>
         </div>
-      {% endform %}
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Cart Drawer -->
+<div class="cart-overlay" id="cart-overlay"></div>
+<div class="cart-drawer" id="cart-drawer" dir="{% if is_rtl %}rtl{% else %}ltr{% endif %}">
+  <div class="p-6">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-2xl font-bold text-[#292c2f]">{{ 'product.shopping_cart' | t }}</h2>
+      <button id="close-cart" class="text-[#292c2f] hover:text-[#3c4043] text-2xl">&times;</button>
+    </div>
+    <div id="cart-items" class="mb-6">
+      <!-- Cart items will be loaded here -->
+    </div>
+    <div class="border-t pt-4">
+      <div class="flex justify-between mb-4">
+        <span class="font-medium text-[#292c2f]">{{ 'product.subtotal' | t }}</span>
+        <span id="cart-subtotal" class="font-bold text-[#292c2f]">$0.00</span>
+      </div>
+      <a href="/cart" class="block w-full bg-[#292c2f] text-white text-center py-3 rounded-sm hover:bg-[#3c4043] transition font-medium mb-2">
+        {{ 'product.view_cart' | t }}
+      </a>
+      <a href="/checkout" class="block w-full bg-[#ECC689] text-[#292c2f] text-center py-3 rounded-sm hover:bg-[#f9e2a9] transition font-medium">
+        {{ 'product.checkout' | t }}
+      </a>
     </div>
   </div>
 </div>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    // Quantity controls
     const quantityInput = document.querySelector("input[name='quantity']");
     const minusBtn = document.querySelector('.btn-minus');
     const plusBtn = document.querySelector('.btn-plus');
@@ -140,46 +256,251 @@
       let value = parseInt(quantityInput.value);
       quantityInput.value = value + 1;
     });
-  });
-  document.querySelectorAll('.flex[data-option-index]').forEach((group) => {
-    const optionIndex = group.dataset.optionIndex;
-    const hiddenInput = document.getElementById(`Option-{{ section.id }}-${optionIndex}`);
-    group.querySelectorAll('.variant-btn').forEach((btn, idx) => {
-      // Select first by default
-      if (idx === 0) {
-        btn.classList.add('bg-[#ECC689]');
-        hiddenInput.value = btn.dataset.value;
+
+    // Cart drawer functionality
+    const cartDrawer = document.getElementById('cart-drawer');
+    const cartOverlay = document.getElementById('cart-overlay');
+    const closeCartBtn = document.getElementById('close-cart');
+
+    function openCart() {
+      cartDrawer.classList.add('open');
+      cartOverlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeCart() {
+      cartDrawer.classList.remove('open');
+      cartOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    closeCartBtn.addEventListener('click', closeCart);
+    cartOverlay.addEventListener('click', closeCart);
+
+    // Load cart
+    async function loadCart() {
+      try {
+        const response = await fetch('/cart.js');
+        const cart = await response.json();
+        updateCartUI(cart);
+      } catch (error) {
+        console.error('Error loading cart:', error);
+      }
+    }
+
+    function updateCartUI(cart) {
+      const cartItems = document.getElementById('cart-items');
+      const cartSubtotal = document.getElementById('cart-subtotal');
+
+      if (cart.items.length === 0) {
+        cartItems.innerHTML = `<p class="text-[#939498] text-center py-8">${translations.cart_empty}</p>`;
+        cartSubtotal.textContent = '$0.00';
+        return;
+      }
+
+      cartItems.innerHTML = cart.items.map(item => `
+        <div class="flex gap-4 mb-4 pb-4 border-b border-[#939498]" dir="${isRTL ? 'rtl' : 'ltr'}">
+          <img src="${item.featured_image?.url || item.image}" alt="${item.title}" class="w-20 h-20 object-cover rounded">
+          <div class="flex-1">
+            <h3 class="font-medium text-[#292c2f]">${item.product_title}</h3>
+            ${item.variant_title ? `<p class="text-sm text-[#939498]">${item.variant_title}</p>` : ''}
+            <p class="text-sm text-[#939498]">${translations.qty}: ${item.quantity}</p>
+            <p class="font-bold text-[#292c2f]">$${(item.final_line_price / 100).toFixed(2)}</p>
+          </div>
+        </div>
+      `).join('');
+
+      cartSubtotal.textContent = `$${(cart.total_price / 100).toFixed(2)}`;
+    }
+
+    // Add to cart functionality
+    const productForm = document.getElementById('product-form');
+    productForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const formData = new FormData(productForm);
+      const variantId = formData.get('id');
+      const quantity = formData.get('quantity');
+
+      try {
+        const response = await fetch('/cart/add.js', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: variantId,
+            quantity: parseInt(quantity)
+          })
+        });
+
+        if (response.ok) {
+          await loadCart();
+          openCart();
+        } else {
+          alert(translations.add_to_cart_error);
+        }
+      } catch (error) {
+        console.error('Error adding to cart:', error);
+        alert(translations.add_to_cart_error_message);
       }
     });
 
-    group.querySelectorAll('.variant-btn').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        // Remove selection from all
-        group.querySelectorAll('.variant-btn').forEach((b) => b.classList.remove('bg-[#ECC689]'));
+    // Variant selection
+    const variantIdInput = document.getElementById('variant-id');
+    const addToCartBtn = document.getElementById('add-to-cart-btn');
+    const currentPriceEl = document.getElementById('current-price');
+    const comparePriceEl = document.getElementById('compare-price');
+    const priceContainer = document.getElementById('price-container');
+    
+    let selectedOptions = {};
+    let currentVariant = null;
 
-        // Add selected styles
-        btn.classList.add('bg-[#ECC689]');
+    // Initialize first option as selected for each group
+    document.querySelectorAll('.flex[data-option-index]').forEach((group) => {
+      const optionName = group.dataset.optionName;
+      const buttons = group.querySelectorAll('.variant-btn');
+      
+      if (buttons.length > 0) {
+        buttons[0].classList.add('bg-[#ECC689]');
+        selectedOptions[optionName] = buttons[0].dataset.value;
+      }
 
-        hiddenInput.value = btn.dataset.value;
+      // Add click handlers
+      buttons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          // Remove selection from all buttons in this group
+          buttons.forEach((b) => b.classList.remove('bg-[#ECC689]'));
+          
+          // Add selection to clicked button
+          btn.classList.add('bg-[#ECC689]');
+          
+          // Update selected options
+          selectedOptions[optionName] = btn.dataset.value;
+          
+          // Find and update variant
+          updateVariant();
+        });
       });
     });
+
+    function updateVariantImage(variant) {
+      if (!variant.featured_media) return;
+
+      const items = document.querySelectorAll('.product-medias .item');
+      const dots = document.querySelectorAll('.product-medias button[data-index]');
+      
+      // Find the media item that matches the variant's featured media
+      let targetIndex = 0;
+      items.forEach((item, index) => {
+        if (item.dataset.mediaId == variant.featured_media.id) {
+          targetIndex = index;
+        }
+      });
+
+      // Update slider position
+      const width = items[0].clientWidth;
+      items.forEach((item, i) => {
+        const offset = isRTL ? width * targetIndex : -width * targetIndex;
+        item.style.transform = `translateX(${offset}px)`;
+      });
+
+      // Update dots
+      dots.forEach((dot, i) => {
+        if (i === targetIndex) {
+          dot.classList.add('bg-[#292c2f]');
+          dot.classList.remove('bg-[#939498]');
+          dot.classList.add('w-4');
+        } else {
+          dot.classList.add('bg-[#939498]');
+          dot.classList.remove('bg-[#292c2f]');
+          dot.classList.remove('w-4');
+        }
+      });
+    }
+
+    function updateVariant() {
+      // Find matching variant
+      const matchingVariant = productVariants.find(variant => {
+        return variant.options.every((option, index) => {
+          const optionName = productJSON.options[index];
+          return selectedOptions[optionName] === option;
+        });
+      });
+
+      if (matchingVariant) {
+        currentVariant = matchingVariant;
+        
+        // Update hidden input
+        variantIdInput.value = matchingVariant.id;
+        
+        // Update image
+        updateVariantImage(matchingVariant);
+        
+        // Update price
+        const price = (matchingVariant.price / 100).toFixed(2);
+        const comparePrice = matchingVariant.compare_at_price ? (matchingVariant.compare_at_price / 100).toFixed(2) : null;
+        
+        if (comparePrice && comparePrice > price) {
+          currentPriceEl.textContent = `$${price}`;
+          currentPriceEl.classList.add('line-through');
+          
+          if (!comparePriceEl) {
+            const newComparePrice = document.createElement('p');
+            newComparePrice.id = 'compare-price';
+            newComparePrice.className = 'text-2xl text-[#292c2f] font-bold';
+            newComparePrice.textContent = `$${comparePrice}`;
+            priceContainer.appendChild(newComparePrice);
+          } else {
+            comparePriceEl.textContent = `$${comparePrice}`;
+          }
+        } else {
+          currentPriceEl.textContent = `$${price}`;
+          currentPriceEl.classList.remove('line-through');
+          if (comparePriceEl) {
+            comparePriceEl.remove();
+          }
+        }
+        
+        // Update button availability
+        if (matchingVariant.available) {
+          addToCartBtn.disabled = false;
+          addToCartBtn.textContent = translations.add_to_cart;
+        } else {
+          addToCartBtn.disabled = true;
+          addToCartBtn.textContent = translations.sold_out;
+        }
+      }
+    }
+
+    // Initialize variant on page load
+    if (Object.keys(selectedOptions).length > 0) {
+      updateVariant();
+    }
+
+    // Load cart on page load
+    loadCart();
   });
 </script>
+
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const items = document.querySelectorAll('.product-medias .item');
     const prevBtn = document.getElementById('prev');
     const nextBtn = document.getElementById('next');
     const dots = document.querySelectorAll('.product-medias button[data-index]');
+    
+    if (items.length === 0) return;
+    
     const width = items[0].clientWidth;
-    console.log(width);
     let current = 0;
 
     function showSlide(index) {
       items.forEach((item, i) => {
         item.classList.remove('active');
         if (i === index) item.classList.add('active');
-        item.style.transform = `translateX(-${width * index}px)`;
+        const offset = isRTL ? width * index : -width * index;
+        item.style.transform = `translateX(${offset}px)`;
       });
 
       // Update dots
@@ -216,47 +537,3 @@
     showSlide(current);
   });
 </script>
-{% comment %}
-  {% schema %}
-  {
-    "name": "Product",
-    "blocks": [
-      {
-        "type": "vendor",
-        "name": "Vendor",
-        "limit": 1
-      },
-      {
-        "type": "title",
-        "name": "Title",
-        "limit": 1
-      },
-      {
-        "type": "price",
-        "name": "Price",
-        "limit": 1
-      },
-      {
-        "type": "variant_selector",
-        "name": "Variant Selector",
-        "limit": 1
-      },
-      {
-        "type": "quantity",
-        "name": "Quantity",
-        "limit": 1
-      },
-      {
-        "type": "description",
-        "name": "Description",
-        "limit": 1
-      },
-      {
-        "type": "checkout_buttons",
-        "name": "Checkout Buttons",
-        "limit": 1
-      }
-    ]
-  }
-  {% endschema %}
-{% endcomment %}

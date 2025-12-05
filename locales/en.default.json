@@ -1,18 +1,32 @@
 {
   "header": {
     "menu": "Menu",
-    "close_menu": "Close menu",
+    "close_menu": "Close Menu",
     "cart": "Cart",
     "account": "Account",
     "login": "Login",
     "register": "Register",
     "logout": "Logout",
-    "language_selector": "Select language"
+    "language_selector": "Select Language"
   },
   "homepage": {
     "new_arrivals": "New Arrivals",
-    "shop_all": "Shop all",
+    "shop_all": "Shop All",
     "newsletter_placeholder": "Enter your email",
     "subscribe": "Subscribe"
+  },
+  "product": {
+    "shopping_cart": "Shopping Cart",
+    "subtotal": "Subtotal",
+    "view_cart": "View Cart",
+    "checkout": "Checkout",
+    "cart_empty": "Your cart is empty",
+    "quantity": "Quantity",
+    "qty": "Qty",
+    "add_to_cart": "Add to Cart",
+    "sold_out": "Sold Out",
+    "continue_shopping": "Continue Shopping",
+    "add_to_cart_error": "Failed to add item to cart",
+    "add_to_cart_error_message": "An error occurred while adding to cart"
   }
 }
