@@ -9,12 +9,89 @@
     "logout": "Logout",
     "language_selector": "Select Language"
   },
+
   "homepage": {
     "new_arrivals": "New Arrivals",
     "shop_all": "Shop All",
     "newsletter_placeholder": "Enter your email",
-    "subscribe": "Subscribe"
+    "subscribe": "Subscribe",
+
+    "name": "Homepage",
+
+    "settings": {
+      "hero_section": {
+        "content": "Hero Section",
+        "background_image_en": { "label": "Background Image (English)" },
+        "background_image_ar": { "label": "Background Image (Arabic)" },
+        "heading_en": { "label": "Heading (English)" },
+        "heading_ar": { "label": "Heading (Arabic)" },
+        "subheading_en": { "label": "Subheading (English)" },
+        "subheading_ar": { "label": "Subheading (Arabic)" },
+        "button_text_en": { "label": "Button Text (English)" },
+        "button_text_ar": { "label": "Button Text (Arabic)" },
+        "button_link": { "label": "Button Link" }
+      },
+
+      "featured_collections": {
+        "content": "Featured Collections",
+        "collections_heading_en": { "label": "Collections Heading (English)" },
+        "collections_heading_ar": { "label": "Collections Heading (Arabic)" },
+        "collection_1": { "label": "Collection 1" },
+        "collection_2": { "label": "Collection 2" },
+        "collection_3": { "label": "Collection 3" }
+      },
+
+      "values_section": {
+        "content": "Values Section",
+        "values_heading_en": { "label": "Values Heading (English)" },
+        "values_heading_ar": { "label": "Values Heading (Arabic)" },
+        "value_1_title_en": { "label": "Value 1 Title (English)" },
+        "value_1_title_ar": { "label": "Value 1 Title (Arabic)" },
+        "value_1_text_en": { "label": "Value 1 Text (English)" },
+        "value_1_text_ar": { "label": "Value 1 Text (Arabic)" },
+
+        "value_2_title_en": { "label": "Value 2 Title (English)" },
+        "value_2_title_ar": { "label": "Value 2 Title (Arabic)" },
+        "value_2_text_en": { "label": "Value 2 Text (English)" },
+        "value_2_text_ar": { "label": "Value 2 Text (Arabic)" },
+
+        "value_3_title_en": { "label": "Value 3 Title (English)" },
+        "value_3_title_ar": { "label": "Value 3 Title (Arabic)" },
+        "value_3_text_en": { "label": "Value 3 Text (English)" },
+        "value_3_text_ar": { "label": "Value 3 Text (Arabic)" }
+      },
+
+      "testimonials": {
+        "content": "Testimonials Section",
+        "testimonials_heading_en": { "label": "Testimonials Heading (English)" },
+        "testimonials_heading_ar": { "label": "Testimonials Heading (Arabic)" },
+
+        "testimonial_1_text_en": { "label": "Testimonial 1 Text (English)" },
+        "testimonial_1_text_ar": { "label": "Testimonial 1 Text (Arabic)" },
+        "testimonial_1_author_en": { "label": "Testimonial 1 Author (English)" },
+        "testimonial_1_author_ar": { "label": "Testimonial 1 Author (Arabic)" },
+
+        "testimonial_2_text_en": { "label": "Testimonial 2 Text (English)" },
+        "testimonial_2_text_ar": { "label": "Testimonial 2 Text (Arabic)" },
+        "testimonial_2_author_en": { "label": "Testimonial 2 Author (English)" },
+        "testimonial_2_author_ar": { "label": "Testimonial 2 Author (Arabic)" },
+
+        "testimonial_3_text_en": { "label": "Testimonial 3 Text (English)" },
+        "testimonial_3_text_ar": { "label": "Testimonial 3 Text (Arabic)" },
+        "testimonial_3_author_en": { "label": "Testimonial 3 Author (English)" },
+        "testimonial_3_author_ar": { "label": "Testimonial 3 Author (Arabic)" }
+      },
+
+      "newsletter": {
+        "content": "Newsletter Section",
+        "newsletter_heading_en": { "label": "Newsletter Heading (English)" },
+        "newsletter_heading_ar": { "label": "Newsletter Heading (Arabic)" },
+        "newsletter_text_en": { "label": "Newsletter Text (English)" },
+        "newsletter_text_ar": { "label": "Newsletter Text (Arabic)" }
+      }
+    }
   },
+
   "product": {
     "shopping_cart": "Shopping Cart",
     "subtotal": "Subtotal",
