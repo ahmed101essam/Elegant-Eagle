@@ -18,15 +18,12 @@
     "logout": "تسجيل الخروج",
     "language_selector": "اختر اللغة"
   },
-
   "homepage": {
     "new_arrivals": "وصل حديثاً",
     "shop_all": "تسوق الكل",
     "newsletter_placeholder": "أدخل بريدك الإلكتروني",
     "subscribe": "اشترك",
-
     "name": "الصفحة الرئيسية",
-
     "settings": {
       "hero_section": {
         "content": "قسم الهيرو",
@@ -114,5 +111,73 @@
     "continue_shopping": "متابعة التسوق",
     "add_to_cart_error": "فشل في إضافة المنتج إلى السلة",
     "add_to_cart_error_message": "حدث خطأ أثناء الإضافة إلى السلة"
+  },
+  "sections": {
+    "homepage": {
+      "name": "الصفحة الرئيسية",
+      "settings": {
+        "hero_section": { "content": "قسم البانر" },
+        "background_image_en": { "label": "صورة الخلفية (إنجليزي)" },
+        "background_image_ar": { "label": "صورة الخلفية (عربي)" },
+        "heading_en": { "label": "العنوان الرئيسي (إنجليزي)" },
+        "heading_ar": { "label": "العنوان الرئيسي (عربي)" },
+        "subheading_en": { "label": "العنوان الفرعي (إنجليزي)" },
+        "subheading_ar": { "label": "العنوان الفرعي (عربي)" },
+        "button_text_en": { "label": "نص الزر (إنجليزي)" },
+        "button_text_ar": { "label": "نص الزر (عربي)" },
+        "button_link": { "label": "رابط الزر" },
+
+        "featured_collections": { "content": "المجموعات المميزة" },
+        "collections_heading_en": { "label": "عنوان المجموعات (إنجليزي)" },
+        "collections_heading_ar": { "label": "عنوان المجموعات (عربي)" },
+        "collection_1": { "label": "المجموعة 1" },
+        "collection_2": { "label": "المجموعة 2" },
+        "collection_3": { "label": "المجموعة 3" },
+
+        "values_section": { "content": "قيمنا" },
+        "values_heading_en": { "label": "عنوان القيم (إنجليزي)" },
+        "values_heading_ar": { "label": "عنوان القيم (عربي)" },
+
+        "value_1_title_en": { "label": "عنوان القيمة 1 (إنجليزي)" },
+        "value_1_title_ar": { "label": "عنوان القيمة 1 (عربي)" },
+        "value_1_text_en": { "label": "نص القيمة 1 (إنجليزي)" },
+        "value_1_text_ar": { "label": "نص القيمة 1 (عربي)" },
+
+        "value_2_title_en": { "label": "عنوان القيمة 2 (إنجليزي)" },
+        "value_2_title_ar": { "label": "عنوان القيمة 2 (عربي)" },
+        "value_2_text_en": { "label": "نص القيمة 2 (إنجليزي)" },
+        "value_2_text_ar": { "label": "نص القيمة 2 (عربي)" },
+
+        "value_3_title_en": { "label": "عنوان القيمة 3 (إنجليزي)" },
+        "value_3_title_ar": { "label": "عنوان القيمة 3 (عربي)" },
+        "value_3_text_en": { "label": "نص القيمة 3 (إنجليزي)" },
+        "value_3_text_ar": { "label": "نص القيمة 3 (عربي)" },
+
+        "testimonials": { "content": "آراء العملاء" },
+        "testimonials_heading_en": { "label": "عنوان الآراء (إنجليزي)" },
+        "testimonials_heading_ar": { "label": "عنوان الآراء (عربي)" },
+
+        "testimonial_1_text_en": { "label": "نص الرأي 1 (إنجليزي)" },
+        "testimonial_1_text_ar": { "label": "نص الرأي 1 (عربي)" },
+        "testimonial_1_author_en": { "label": "اسم العميل 1 (إنجليزي)" },
+        "testimonial_1_author_ar": { "label": "اسم العميل 1 (عربي)" },
+
+        "testimonial_2_text_en": { "label": "نص الرأي 2 (إنجليزي)" },
+        "testimonial_2_text_ar": { "label": "نص الرأي 2 (عربي)" },
+        "testimonial_2_author_en": { "label": "اسم العميل 2 (إنجليزي)" },
+        "testimonial_2_author_ar": { "label": "اسم العميل 2 (عربي)" },
+
+        "testimonial_3_text_en": { "label": "نص الرأي 3 (إنجليزي)" },
+        "testimonial_3_text_ar": { "label": "نص الرأي 3 (عربي)" },
+        "testimonial_3_author_en": { "label": "اسم العميل 3 (إنجليزي)" },
+        "testimonial_3_author_ar": { "label": "اسم العميل 3 (عربي)" },
+
+        "newsletter": { "content": "قسم النشرة البريدية" },
+        "newsletter_heading_en": { "label": "عنوان النشرة (إنجليزي)" },
+        "newsletter_heading_ar": { "label": "عنوان النشرة (عربي)" },
+        "newsletter_text_en": { "label": "نص النشرة (إنجليزي)" },
+        "newsletter_text_ar": { "label": "نص النشرة (عربي)" }
+      }
+    }
   }
 }
