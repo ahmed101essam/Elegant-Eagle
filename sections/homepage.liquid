@@ -101,12 +101,14 @@
       <div class="swiper-pagination"></div>
     </div>
   </div>
-  
+
   <div class="flex justify-center mb-20">
     <a
       href="{{ routes.all_products_collection_url }}"
       class="bg-[#ecc689] text-white px-4 py-2 font-medium rounded-full hover:bg-[#F9E2A9] transition"
-    >{{ 'homepage.shop_all' | t }}</a>
+    >
+      {{- 'homepage.shop_all' | t -}}
+    </a>
   </div>
 
   <!-- Featured Collections Section -->
@@ -133,7 +135,7 @@
           </h4>
         </a>
       {% endif %}
-      
+
       {% if section.settings.collection_2 != blank %}
         <a href="{{ collections[section.settings.collection_2].url }}" class="group">
           <div class="border-double border-4 border-[#ECC689] overflow-hidden">
@@ -148,7 +150,7 @@
           </h4>
         </a>
       {% endif %}
-      
+
       {% if section.settings.collection_3 != blank %}
         <a href="{{ collections[section.settings.collection_3].url }}" class="group">
           <div class="border-double border-4 border-[#ECC689] overflow-hidden">
@@ -196,7 +198,7 @@
             {% endif %}
           </p>
         </div>
-        
+
         <div class="text-center">
           <div class="border border-[#ECC689] rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
             <span class="text-2xl text-[#ECC689]">✦</span>
@@ -216,7 +218,7 @@
             {% endif %}
           </p>
         </div>
-        
+
         <div class="text-center">
           <div class="border border-[#ECC689] rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
             <span class="text-2xl text-[#ECC689]">✦</span>
@@ -254,14 +256,17 @@
         {% if section.settings.testimonial_1_text_en != blank or section.settings.testimonial_1_text_ar != blank %}
           <div class="swiper-slide">
             <div class="border-double border-4 border-[#ECC689] p-6 md:p-8 h-full">
-              <p class="text-lg italic mb-4">"
+              <p class="text-lg italic mb-4">
+                "
                 {%- if is_rtl -%}
                   {{ section.settings.testimonial_1_text_ar }}
                 {%- else -%}
                   {{ section.settings.testimonial_1_text_en }}
                 {%- endif -%}
-              "</p>
-              <p class="text-[#ECC689] font-medium">— 
+                "
+              </p>
+              <p class="text-[#ECC689] font-medium">
+                —
                 {%- if is_rtl -%}
                   {{ section.settings.testimonial_1_author_ar }}
                 {%- else -%}
@@ -271,18 +276,21 @@
             </div>
           </div>
         {% endif %}
-        
+
         {% if section.settings.testimonial_2_text_en != blank or section.settings.testimonial_2_text_ar != blank %}
           <div class="swiper-slide">
             <div class="border-double border-4 border-[#ECC689] p-6 md:p-8 h-full">
-              <p class="text-lg italic mb-4">"
+              <p class="text-lg italic mb-4">
+                "
                 {%- if is_rtl -%}
                   {{ section.settings.testimonial_2_text_ar }}
                 {%- else -%}
                   {{ section.settings.testimonial_2_text_en }}
                 {%- endif -%}
-              "</p>
-              <p class="text-[#ECC689] font-medium">— 
+                "
+              </p>
+              <p class="text-[#ECC689] font-medium">
+                —
                 {%- if is_rtl -%}
                   {{ section.settings.testimonial_2_author_ar }}
                 {%- else -%}
@@ -292,18 +300,21 @@
             </div>
           </div>
         {% endif %}
-        
+
         {% if section.settings.testimonial_3_text_en != blank or section.settings.testimonial_3_text_ar != blank %}
           <div class="swiper-slide">
             <div class="border-double border-4 border-[#ECC689] p-6 md:p-8 h-full">
-              <p class="text-lg italic mb-4">"
+              <p class="text-lg italic mb-4">
+                "
                 {%- if is_rtl -%}
                   {{ section.settings.testimonial_3_text_ar }}
                 {%- else -%}
                   {{ section.settings.testimonial_3_text_en }}
                 {%- endif -%}
-              "</p>
-              <p class="text-[#ECC689] font-medium">— 
+                "
+              </p>
+              <p class="text-[#ECC689] font-medium">
+                —
                 {%- if is_rtl -%}
                   {{ section.settings.testimonial_3_author_ar }}
                 {%- else -%}
@@ -360,7 +371,7 @@
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const isRTL = '{{ request.locale.iso_code }}' === 'ar';
-    
+
     new Swiper('.newProductsSwiper', {
       slidesPerView: 1.2,
       spaceBetween: 16,
@@ -414,300 +425,300 @@
     });
   });
 </script>
-
 {% schema %}
 {
-  "name": "sections.homepage.name",
+  "name": "Homepage",
   "settings": [
     {
       "type": "header",
-      "content": "t:sections.homepage.settings.hero_section.content"
+      "content": "Hero Section"
     },
     {
       "type": "image_picker",
       "id": "background_image_en",
-      "label": "t:sections.homepage.settings.background_image_en.label"
+      "label": "Background Image (English)"
     },
     {
       "type": "image_picker",
       "id": "background_image_ar",
-      "label": "t:sections.homepage.settings.background_image_ar.label"
+      "label": "Background Image (Arabic)"
     },
     {
       "type": "text",
       "id": "heading_en",
-      "label": "t:sections.homepage.settings.heading_en.label",
+      "label": "Heading (English)",
       "default": "Discover Timeless Elegance"
     },
     {
       "type": "text",
       "id": "heading_ar",
-      "label": "t:sections.homepage.settings.heading_ar.label",
+      "label": "Heading (Arabic)",
       "default": "اكتشف الأناقة الخالدة"
     },
     {
       "type": "text",
       "id": "subheading_en",
-      "label": "t:sections.homepage.settings.subheading_en.label",
+      "label": "Subheading (English)",
       "default": "Luxury meets sophistication"
     },
     {
       "type": "text",
       "id": "subheading_ar",
-      "label": "t:sections.homepage.settings.subheading_ar.label",
+      "label": "Subheading (Arabic)",
       "default": "الفخامة تلتقي بالرقي"
     },
     {
       "type": "text",
       "id": "button_text_en",
-      "label": "t:sections.homepage.settings.button_text_en.label",
+      "label": "Button Text (English)",
       "default": "Shop Collection"
     },
     {
       "type": "text",
       "id": "button_text_ar",
-      "label": "t:sections.homepage.settings.button_text_ar.label",
+      "label": "Button Text (Arabic)",
       "default": "تسوق المجموعة"
     },
     {
       "type": "url",
       "id": "button_link",
-      "label": "t:sections.homepage.settings.button_link.label",
+      "label": "Button Link",
       "default": "/collections/all"
     },
     {
       "type": "header",
-      "content": "t:sections.homepage.settings.featured_collections.content"
+      "content": "Featured Collections"
     },
     {
       "type": "text",
       "id": "collections_heading_en",
-      "label": "t:sections.homepage.settings.collections_heading_en.label",
+      "label": "Collections Heading (English)",
       "default": "Shop By Category"
     },
     {
       "type": "text",
       "id": "collections_heading_ar",
-      "label": "t:sections.homepage.settings.collections_heading_ar.label",
+      "label": "Collections Heading (Arabic)",
       "default": "تسوق حسب الفئة"
     },
     {
       "type": "collection",
       "id": "collection_1",
-      "label": "t:sections.homepage.settings.collection_1.label"
+      "label": "Collection 1"
     },
     {
       "type": "collection",
       "id": "collection_2",
-      "label": "t:sections.homepage.settings.collection_2.label"
+      "label": "Collection 2"
     },
     {
       "type": "collection",
       "id": "collection_3",
-      "label": "t:sections.homepage.settings.collection_3.label"
+      "label": "Collection 3"
     },
     {
       "type": "header",
-      "content": "t:sections.homepage.settings.values_section.content"
+      "content": "Values Section"
     },
     {
       "type": "text",
       "id": "values_heading_en",
-      "label": "t:sections.homepage.settings.values_heading_en.label",
+      "label": "Values Heading (English)",
       "default": "Why Choose Us"
     },
     {
       "type": "text",
       "id": "values_heading_ar",
-      "label": "t:sections.homepage.settings.values_heading_ar.label",
+      "label": "Values Heading (Arabic)",
       "default": "لماذا تختارنا"
     },
     {
       "type": "text",
       "id": "value_1_title_en",
-      "label": "t:sections.homepage.settings.value_1_title_en.label",
+      "label": "Value 1 Title (English)",
       "default": "Premium Quality"
     },
     {
       "type": "text",
       "id": "value_1_title_ar",
-      "label": "t:sections.homepage.settings.value_1_title_ar.label",
+      "label": "Value 1 Title (Arabic)",
       "default": "جودة عالية"
     },
     {
       "type": "textarea",
       "id": "value_1_text_en",
-      "label": "t:sections.homepage.settings.value_1_text_en.label",
+      "label": "Value 1 Text (English)",
       "default": "Handpicked materials and expert craftsmanship in every piece"
     },
     {
       "type": "textarea",
       "id": "value_1_text_ar",
-      "label": "t:sections.homepage.settings.value_1_text_ar.label",
+      "label": "Value 1 Text (Arabic)",
       "default": "مواد منتقاة بعناية وحرفية متقنة في كل قطعة"
     },
     {
       "type": "text",
       "id": "value_2_title_en",
-      "label": "t:sections.homepage.settings.value_2_title_en.label",
+      "label": "Value 2 Title (English)",
       "default": "Timeless Design"
     },
     {
       "type": "text",
       "id": "value_2_title_ar",
-      "label": "t:sections.homepage.settings.value_2_title_ar.label",
+      "label": "Value 2 Title (Arabic)",
       "default": "تصميم خالد"
     },
     {
       "type": "textarea",
       "id": "value_2_text_en",
-      "label": "t:sections.homepage.settings.value_2_text_en.label",
+      "label": "Value 2 Text (English)",
       "default": "Classic styles that transcend trends and last for years"
     },
     {
       "type": "textarea",
       "id": "value_2_text_ar",
-      "label": "t:sections.homepage.settings.value_2_text_ar.label",
+      "label": "Value 2 Text (Arabic)",
       "default": "تصاميم كلاسيكية تتجاوز الموضة وتدوم لسنوات"
     },
     {
       "type": "text",
       "id": "value_3_title_en",
-      "label": "t:sections.homepage.settings.value_3_title_en.label",
+      "label": "Value 3 Title (English)",
       "default": "Exceptional Service"
     },
     {
       "type": "text",
       "id": "value_3_title_ar",
-      "label": "t:sections.homepage.settings.value_3_title_ar.label",
+      "label": "Value 3 Title (Arabic)",
       "default": "خدمة استثنائية"
     },
     {
       "type": "textarea",
       "id": "value_3_text_en",
-      "label": "t:sections.homepage.settings.value_3_text_en.label",
+      "label": "Value 3 Text (English)",
       "default": "Dedicated support and care for every customer"
     },
     {
       "type": "textarea",
       "id": "value_3_text_ar",
-      "label": "t:sections.homepage.settings.value_3_text_ar.label",
+      "label": "Value 3 Text (Arabic)",
       "default": "دعم ورعاية مخصصة لكل عميل"
     },
     {
       "type": "header",
-      "content": "t:sections.homepage.settings.testimonials.content"
+      "content": "Testimonials"
     },
     {
       "type": "text",
       "id": "testimonials_heading_en",
-      "label": "t:sections.homepage.settings.testimonials_heading_en.label",
+      "label": "Testimonials Heading (English)",
       "default": "What Our Customers Say"
     },
     {
       "type": "text",
       "id": "testimonials_heading_ar",
-      "label": "t:sections.homepage.settings.testimonials_heading_ar.label",
+      "label": "Testimonials Heading (Arabic)",
       "default": "ماذا يقول عملاؤنا"
     },
     {
       "type": "textarea",
       "id": "testimonial_1_text_en",
-      "label": "t:sections.homepage.settings.testimonial_1_text_en.label",
+      "label": "Testimonial 1 Text (English)",
       "default": "Absolutely stunning quality! Every piece I've purchased has exceeded my expectations."
     },
     {
       "type": "textarea",
       "id": "testimonial_1_text_ar",
-      "label": "t:sections.homepage.settings.testimonial_1_text_ar.label",
+      "label": "Testimonial 1 Text (Arabic)",
       "default": "جودة رائعة حقاً! كل قطعة اشتريتها فاقت توقعاتي."
     },
     {
       "type": "text",
       "id": "testimonial_1_author_en",
-      "label": "t:sections.homepage.settings.testimonial_1_author_en.label",
+      "label": "Testimonial 1 Author (English)",
       "default": "Sarah M."
     },
     {
       "type": "text",
       "id": "testimonial_1_author_ar",
-      "label": "t:sections.homepage.settings.testimonial_1_author_ar.label",
+      "label": "Testimonial 1 Author (Arabic)",
       "default": "سارة م."
     },
     {
       "type": "textarea",
       "id": "testimonial_2_text_en",
-      "label": "t:sections.homepage.settings.testimonial_2_text_en.label",
+      "label": "Testimonial 2 Text (English)",
       "default": "The attention to detail is remarkable. I always receive compliments on my purchases."
     },
     {
       "type": "textarea",
       "id": "testimonial_2_text_ar",
-      "label": "t:sections.homepage.settings.testimonial_2_text_ar.label",
+      "label": "Testimonial 2 Text (Arabic)",
       "default": "الاهتمام بالتفاصيل رائع. أتلقى دائماً إطراءات على مشترياتي."
     },
     {
       "type": "text",
       "id": "testimonial_2_author_en",
-      "label": "t:sections.homepage.settings.testimonial_2_author_en.label",
+      "label": "Testimonial 2 Author (English)",
       "default": "James L."
     },
     {
       "type": "text",
       "id": "testimonial_2_author_ar",
-      "label": "t:sections.homepage.settings.testimonial_2_author_ar.label",
+      "label": "Testimonial 2 Author (Arabic)",
       "default": "جيمس ل."
     },
     {
       "type": "textarea",
       "id": "testimonial_3_text_en",
-      "label": "t:sections.homepage.settings.testimonial_3_text_en.label",
+      "label": "Testimonial 3 Text (English)",
       "default": "Beautiful designs and exceptional customer service. My go-to for elegant pieces."
     },
     {
       "type": "textarea",
       "id": "testimonial_3_text_ar",
-      "label": "t:sections.homepage.settings.testimonial_3_text_ar.label",
+      "label": "Testimonial 3 Text (Arabic)",
       "default": "تصاميم جميلة وخدمة عملاء استثنائية. وجهتي المفضلة للقطع الأنيقة."
     },
     {
       "type": "text",
       "id": "testimonial_3_author_en",
-      "label": "t:sections.homepage.settings.testimonial_3_author_en.label",
+      "label": "Testimonial 3 Author (English)",
       "default": "Emily R."
     },
     {
       "type": "text",
       "id": "testimonial_3_author_ar",
-      "label": "t:sections.homepage.settings.testimonial_3_author_ar.label",
+      "label": "Testimonial 3 Author (Arabic)",
       "default": "إيميلي ر."
     },
     {
       "type": "header",
-      "content": "t:sections.homepage.settings.newsletter.content"
+      "content": "Newsletter"
     },
     {
       "type": "text",
       "id": "newsletter_heading_en",
-      "label": "t:sections.homepage.settings.newsletter_heading_en.label",
+      "label": "Newsletter Heading (English)",
       "default": "Stay Connected"
     },
     {
       "type": "text",
       "id": "newsletter_heading_ar",
-      "label": "t:sections.homepage.settings.newsletter_heading_ar.label",
+      "label": "Newsletter Heading (Arabic)",
       "default": "ابق على تواصل"
     },
     {
       "type": "text",
       "id": "newsletter_text_en",
-      "label": "t:sections.homepage.settings.newsletter_text_en.label",
+      "label": "Newsletter Text (English)",
       "default": "Subscribe to receive exclusive offers and updates"
     },
     {
       "type": "text",
       "id": "newsletter_text_ar",
-      "label": "t:sections.homepage.settings.newsletter_text_ar.label"
+      "label": "Newsletter Text (Arabic)",
+      "default": "اشترك لتلقي العروض الحصرية والتحديثات"
     }
   ]
 }
