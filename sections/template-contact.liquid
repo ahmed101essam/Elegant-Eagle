@@ -1,15 +1,32 @@
-<div class="py-12">
+{% assign is_rtl = false %}
+{% if request.locale.iso_code == 'ar' %}
+  {% assign is_rtl = true %}
+{% endif %}
+
+<div class="py-12" dir="{% if is_rtl %}rtl{% else %}ltr{% endif %}">
   <div class="max-w-6xl mx-auto px-4">
     <!-- Hero Section -->
     <div
       class="h-48 md:h-96 p-2"
-      style="{% if section.settings.background_image %}background-image: url('{{ section.settings.background_image | image_url: width: 1920 }}'); background-size: cover; background-position: center;{% endif %}"
+      style="{% if is_rtl %}{% if section.settings.background_image_ar %}background-image: url('{{ section.settings.background_image_ar | image_url: width: 1920 }}');{% endif %}{% else %}{% if section.settings.background_image_en %}background-image: url('{{ section.settings.background_image_en | image_url: width: 1920 }}');{% endif %}{% endif %} background-size: cover; background-position: center;"
     >
       <div
-        class="h-full border-double border-6 border-[#ECC689] p-2 md:p-6 flex flex-col gap-1 md:gap-2 justify-center"
+        class="h-full border-double border-4 border-[#ECC689] p-2 md:p-6 flex flex-col gap-1 md:gap-2 justify-center"
       >
-        <h2 class="text-[#ECC689] text-2xl md:text-4xl font-medium">{{ section.settings.heading }}</h2>
-        <p class="max-w-xl text-lg md:text-xl text-white">{{ section.settings.subheading }}</p>
+        <h2 class="text-[#ECC689] text-2xl md:text-4xl font-medium">
+          {% if is_rtl %}
+            {{ section.settings.heading_ar }}
+          {% else %}
+            {{ section.settings.heading_en }}
+          {% endif %}
+        </h2>
+        <p class="max-w-xl text-lg md:text-xl text-white">
+          {% if is_rtl %}
+            {{ section.settings.subheading_ar }}
+          {% else %}
+            {{ section.settings.subheading_en }}
+          {% endif %}
+        </p>
       </div>
     </div>
 
@@ -17,14 +34,22 @@
     <div class="flex flex-col md:flex-row gap-8 md:gap-12 mt-12">
       <!-- Contact Information -->
       <div class="flex-1">
-        <h3 class="text-2xl md:text-3xl text-[#ECC689] font-medium mb-6">{{ section.settings.info_heading }}</h3>
+        <h3 class="text-2xl md:text-3xl text-[#ECC689] font-medium mb-6">
+          {% if is_rtl %}
+            {{ section.settings.info_heading_ar }}
+          {% else %}
+            {{ section.settings.info_heading_en }}
+          {% endif %}
+        </h3>
 
         <div class="space-y-4">
           {% if section.settings.phone != blank %}
             <div class="flex items-start gap-4">
               <i class="fa-solid fa-phone text-[#ECC689] text-xl mt-1"></i>
               <div>
-                <p class="font-medium text-gray-800">Phone</p>
+                <p class="font-medium text-gray-800">
+                  {% if is_rtl %}هاتف{% else %}Phone{% endif %}
+                </p>
                 <a href="tel:{{ section.settings.phone }}" class="text-gray-600 hover:text-[#ECC689]">
                   {{ section.settings.phone }}
                 </a>
@@ -36,7 +61,9 @@
             <div class="flex items-start gap-4">
               <i class="fa-solid fa-envelope text-[#ECC689] text-xl mt-1"></i>
               <div>
-                <p class="font-medium text-gray-800">Email</p>
+                <p class="font-medium text-gray-800">
+                  {% if is_rtl %}البريد الإلكتروني{% else %}Email{% endif %}
+                </p>
                 <a href="mailto:{{ section.settings.email }}" class="text-gray-600 hover:text-[#ECC689]">
                   {{ section.settings.email }}
                 </a>
@@ -48,7 +75,9 @@
             <div class="flex items-start gap-4">
               <i class="fa-solid fa-location-dot text-[#ECC689] text-xl mt-1"></i>
               <div>
-                <p class="font-medium text-gray-800">Address</p>
+                <p class="font-medium text-gray-800">
+                  {% if is_rtl %}العنوان{% else %}Address{% endif %}
+                </p>
                 <p class="text-gray-600">{{ section.settings.address }}</p>
               </div>
             </div>
@@ -58,7 +87,9 @@
             <div class="flex items-start gap-4">
               <i class="fa-solid fa-clock text-[#ECC689] text-xl mt-1"></i>
               <div>
-                <p class="font-medium text-gray-800">Business Hours</p>
+                <p class="font-medium text-gray-800">
+                  {% if is_rtl %}ساعات العمل{% else %}Business Hours{% endif %}
+                </p>
                 <p class="text-gray-600">{{ section.settings.hours }}</p>
               </div>
             </div>
@@ -68,18 +99,34 @@
 
       <!-- Contact Form -->
       <div class="flex-1">
-        <h3 class="text-2xl md:text-3xl text-[#ECC689] font-medium mb-6">{{ section.settings.form_heading }}</h3>
+        <h3 class="text-2xl md:text-3xl text-[#ECC689] font-medium mb-6">
+          {% if is_rtl %}
+            {{ section.settings.form_heading_ar }}
+          {% else %}
+            {{ section.settings.form_heading_en }}
+          {% endif %}
+        </h3>
 
         {% form 'contact' %}
           {% if form.posted_successfully? %}
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-              {{ section.settings.success_message }}
+              {% if is_rtl %}
+                {{ section.settings.success_message_ar }}
+              {% else %}
+                {{ section.settings.success_message_en }}
+              {% endif %}
             </div>
           {% endif %}
 
           {% if form.errors %}
             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-              <p class="font-medium">Please fix the following errors:</p>
+              <p class="font-medium">
+                {% if is_rtl %}
+                  الرجاء تصحيح الأخطاء التالية:
+                {% else %}
+                  Please fix the following errors:
+                {% endif %}
+              </p>
               <ul class="list-disc list-inside mt-2">
                 {% for field in form.errors %}
                   <li>
@@ -93,7 +140,9 @@
 
           <div class="space-y-4">
             <div>
-              <label for="contact-name" class="block text-sm font-medium text-gray-700 mb-1">Name *</label>
+              <label for="contact-name" class="block text-sm font-medium text-gray-700 mb-1">
+                {% if is_rtl %}الاسم *{% else %}Name *{% endif %}
+              </label>
               <input
                 type="text"
                 id="contact-name"
@@ -104,7 +153,9 @@
             </div>
 
             <div>
-              <label for="contact-email" class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+              <label for="contact-email" class="block text-sm font-medium text-gray-700 mb-1">
+                {% if is_rtl %}البريد الإلكتروني *{% else %}Email *{% endif %}
+              </label>
               <input
                 type="email"
                 id="contact-email"
@@ -115,17 +166,21 @@
             </div>
 
             <div>
-              <label for="contact-phone" class="block text-sm font-medium text-gray-700 mb-1">Phone</label>
+              <label for="contact-phone" class="block text-sm font-medium text-gray-700 mb-1">
+                {% if is_rtl %}الهاتف{% else %}Phone{% endif %}
+              </label>
               <input
                 type="tel"
                 id="contact-phone"
                 name="contact[phone]"
-                class="w-full px-4  focus:outline-none  py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#ECC689] focus:border-transparent"
+                class="w-full px-4 focus:outline-none py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-[#ECC689] focus:border-transparent"
               >
             </div>
 
             <div>
-              <label for="contact-message" class="block text-sm font-medium text-gray-700 mb-1">Message *</label>
+              <label for="contact-message" class="block text-sm font-medium text-gray-700 mb-1">
+                {% if is_rtl %}الرسالة *{% else %}Message *{% endif %}
+              </label>
               <textarea
                 id="contact-message"
                 name="contact[body]"
@@ -139,7 +194,11 @@
               type="submit"
               class="w-full bg-[#ECC689] hover:bg-[#F9E2A9] text-white font-medium py-3 px-6 rounded-md transition-colors"
             >
-              {{ section.settings.button_text }}
+              {% if is_rtl %}
+                {{ section.settings.button_text_ar }}
+              {% else %}
+                {{ section.settings.button_text_en }}
+              {% endif %}
             </button>
           </div>
         {% endform %}
@@ -158,20 +217,37 @@
     },
     {
       "type": "image_picker",
-      "id": "background_image",
-      "label": "Background Image"
+      "id": "background_image_en",
+      "label": "Background Image (English)"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_ar",
+      "label": "Background Image (Arabic)"
     },
     {
       "type": "text",
-      "id": "heading",
-      "label": "Heading",
+      "id": "heading_en",
+      "label": "Heading (English)",
       "default": "Get In Touch"
     },
     {
+      "type": "text",
+      "id": "heading_ar",
+      "label": "Heading (Arabic)",
+      "default": "تواصل معنا"
+    },
+    {
       "type": "textarea",
-      "id": "subheading",
-      "label": "Subheading",
+      "id": "subheading_en",
+      "label": "Subheading (English)",
       "default": "Your Style, Our Expertise. Elevate Your Wardrobe with Personalized Service."
+    },
+    {
+      "type": "textarea",
+      "id": "subheading_ar",
+      "label": "Subheading (Arabic)",
+      "default": "أسلوبك، خبرتنا. ارتقِ بخزانة ملابسك بخدمة مخصصة."
     },
     {
       "type": "header",
@@ -179,27 +255,33 @@
     },
     {
       "type": "text",
-      "id": "info_heading",
-      "label": "Contact Info Heading",
+      "id": "info_heading_en",
+      "label": "Contact Info Heading (English)",
       "default": "Contact Information"
+    },
+    {
+      "type": "text",
+      "id": "info_heading_ar",
+      "label": "Contact Info Heading (Arabic)",
+      "default": "معلومات التواصل"
     },
     {
       "type": "text",
       "id": "phone",
       "label": "Phone Number",
-      "default": "Bla Bla Bla Bla"
+      "default": "+1 (555) 123-4567"
     },
     {
       "type": "text",
       "id": "email",
       "label": "Email Address",
-      "default": "Bla Bla Bla Bla"
+      "default": "contact@example.com"
     },
     {
       "type": "textarea",
       "id": "address",
       "label": "Address",
-      "default": "Bla Bla Bla Bla"
+      "default": "123 Fashion Street, New York, NY 10001"
     },
     {
       "type": "textarea",
@@ -213,21 +295,39 @@
     },
     {
       "type": "text",
-      "id": "form_heading",
-      "label": "Form Heading",
+      "id": "form_heading_en",
+      "label": "Form Heading (English)",
       "default": "Send Us a Message"
     },
     {
       "type": "text",
-      "id": "button_text",
-      "label": "Submit Button Text",
+      "id": "form_heading_ar",
+      "label": "Form Heading (Arabic)",
+      "default": "أرسل لنا رسالة"
+    },
+    {
+      "type": "text",
+      "id": "button_text_en",
+      "label": "Submit Button Text (English)",
       "default": "Send Message"
     },
     {
       "type": "text",
-      "id": "success_message",
-      "label": "Success Message",
+      "id": "button_text_ar",
+      "label": "Submit Button Text (Arabic)",
+      "default": "إرسال الرسالة"
+    },
+    {
+      "type": "text",
+      "id": "success_message_en",
+      "label": "Success Message (English)",
       "default": "Thank you for contacting us! We'll get back to you soon."
+    },
+    {
+      "type": "text",
+      "id": "success_message_ar",
+      "label": "Success Message (Arabic)",
+      "default": "شكراً لتواصلك معنا! سنرد عليك قريباً."
     }
   ],
   "presets": [

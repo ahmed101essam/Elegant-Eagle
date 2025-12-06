@@ -1,12 +1,23 @@
+{% assign is_rtl = false %}
+{% if request.locale.iso_code == 'ar' %}
+  {% assign is_rtl = true %}
+{% endif %}
+
 {% if cart.item_count != 0 %}
-  <div class="p-4 py-12">
+  <div class="p-4 py-12" dir="{% if is_rtl %}rtl{% else %}ltr{% endif %}">
     <div class="max-w-6xl mx-auto">
       <!-- Cart Header -->
       <div class="flex items-center justify-between mb-8">
-        <h1 class="text-3xl md:text-4xl font-medium">Shopping Cart</h1>
+        <h1 class="text-3xl md:text-4xl font-medium">
+          {% if is_rtl %}سلة التسوق{% else %}Shopping Cart{% endif %}
+        </h1>
         <span class="text-gray-600">
           {{- cart.item_count }}
-          {% if cart.item_count == 1 %}item{% else %}items{% endif -%}
+          {% if is_rtl %}
+            {% if cart.item_count == 1 %}منتج{% else %}منتجات{% endif %}
+          {% else %}
+            {% if cart.item_count == 1 %}item{% else %}items{% endif %}
+          {% endif -%}
         </span>
       </div>
 
@@ -18,11 +29,19 @@
             <div class="hidden md:block">
               <table class="w-full">
                 <thead class="border-b-2 border-[#ECC689]">
-                  <tr class="text-left">
-                    <th class="pb-4 font-medium">Product</th>
-                    <th class="pb-4 font-medium">Price</th>
-                    <th class="pb-4 font-medium">Quantity</th>
-                    <th class="pb-4 font-medium">Total</th>
+                  <tr class="{% if is_rtl %}text-right{% else %}text-left{% endif %}">
+                    <th class="pb-4 font-medium">
+                      {% if is_rtl %}المنتج{% else %}Product{% endif %}
+                    </th>
+                    <th class="pb-4 font-medium">
+                      {% if is_rtl %}السعر{% else %}Price{% endif %}
+                    </th>
+                    <th class="pb-4 font-medium">
+                      {% if is_rtl %}الكمية{% else %}Quantity{% endif %}
+                    </th>
+                    <th class="pb-4 font-medium">
+                      {% if is_rtl %}المجموع{% else %}Total{% endif %}
+                    </th>
                     <th class="pb-4"></th>
                   </tr>
                 </thead>
@@ -35,12 +54,12 @@
                           <a href="{{ item.url }}" class="flex-shrink-0">
                             {% if item.image %}
                               <img
-                                width=""
-                                height=""
                                 src="{{ item.image | image_url: width: 150 }}"
                                 alt="{{ item.title }}"
                                 class="w-24 h-24 object-cover rounded border-2 border-[#ECC689]"
                                 loading="lazy"
+                                width="96"
+                                height="96"
                               >
                             {% else %}
                               {{
@@ -96,7 +115,7 @@
                           <div class="flex flex-col gap-0 block flex-1">
                             <button
                               type="button"
-                              class=" hover:bg-gray-100 transition-colors quantity-increase"
+                              class="hover:bg-gray-100 transition-colors quantity-increase"
                               data-line="{{ forloop.index }}"
                               data-quantity="{{ item.quantity }}"
                             >
@@ -104,7 +123,7 @@
                             </button>
                             <button
                               type="button"
-                              class=" hover:bg-gray-100 transition-colors quantity-decrease"
+                              class="hover:bg-gray-100 transition-colors quantity-decrease"
                               data-line="{{ forloop.index }}"
                               data-quantity="{{ item.quantity }}"
                             >
@@ -131,7 +150,7 @@
                         <a
                           href="{{ item.url_to_remove }}"
                           class="text-gray-400 hover:text-red-600 transition-colors"
-                          title="Remove item"
+                          title="{% if is_rtl %}إزالة المنتج{% else %}Remove item{% endif %}"
                         >
                           <i class="fa-solid fa-trash text-lg"></i>
                         </a>
@@ -150,12 +169,12 @@
                     <a href="{{ item.url }}" class="flex-shrink-0">
                       {% if item.image %}
                         <img
-                          width=""
-                          height=""
                           src="{{ item.image | image_url: width: 150 }}"
                           alt="{{ item.title }}"
                           class="w-20 h-20 object-cover rounded border-2 border-[#ECC689]"
                           loading="lazy"
+                          width="80"
+                          height="80"
                         >
                       {% else %}
                         {{ 'product-1' | placeholder_svg_tag: 'w-20 h-20 object-cover rounded' }}
@@ -170,7 +189,11 @@
                       {% endif %}
                       <p class="font-medium mt-2">{{ item.final_price | money }}</p>
                     </div>
-                    <a href="{{ item.url_to_remove }}" class="text-gray-400 hover:text-red-600">
+                    <a
+                      href="{{ item.url_to_remove }}"
+                      class="text-gray-400 hover:text-red-600"
+                      title="{% if is_rtl %}إزالة{% else %}Remove{% endif %}"
+                    >
                       <i class="fa-solid fa-trash"></i>
                     </a>
                   </div>
@@ -210,7 +233,9 @@
             </div>
 
             <!-- Update Cart Button (Hidden, triggered by JS) -->
-            <button type="submit" name="update" id="update-cart" class="hidden">Update Cart</button>
+            <button type="submit" name="update" id="update-cart" class="hidden">
+              {% if is_rtl %}تحديث السلة{% else %}Update Cart{% endif %}
+            </button>
           </form>
 
           <!-- Continue Shopping -->
@@ -219,8 +244,8 @@
               href="{{ routes.all_products_collection_url }}"
               class="inline-flex items-center gap-2 text-gray-600 hover:text-[#ECC689] transition-colors"
             >
-              <i class="fa-solid fa-arrow-left"></i>
-              Continue Shopping
+              <i class="fa-solid fa-arrow-{% if is_rtl %}right{% else %}left{% endif %}"></i>
+              {% if is_rtl %}متابعة التسوق{% else %}Continue Shopping{% endif %}
             </a>
           </div>
         </div>
@@ -228,11 +253,15 @@
         <!-- Order Summary -->
         <div class="md:col-span-1">
           <div class="bg-gray-50 rounded-lg p-6 sticky top-4">
-            <h2 class="text-xl font-medium mb-6">Order Summary</h2>
+            <h2 class="text-xl font-medium mb-6">
+              {% if is_rtl %}ملخص الطلب{% else %}Order Summary{% endif %}
+            </h2>
 
             <div class="space-y-3 mb-6">
               <div class="flex justify-between">
-                <span class="text-gray-600">Subtotal</span>
+                <span class="text-gray-600">
+                  {% if is_rtl %}المجموع الفرعي{% else %}Subtotal{% endif %}
+                </span>
                 <span class="font-medium">{{ cart.total_price | money }}</span>
               </div>
 
@@ -246,14 +275,20 @@
               {% endif %}
 
               <div class="flex justify-between text-sm text-gray-500">
-                <span>Shipping</span>
-                <span>Calculated at checkout</span>
+                <span>
+                  {%- if is_rtl %}الشحن{% else %}Shipping{% endif -%}
+                </span>
+                <span>
+                  {% if is_rtl %}يُحسب عند الدفع{% else %}Calculated at checkout{% endif %}
+                </span>
               </div>
             </div>
 
             <div class="border-t border-gray-300 pt-4 mb-6">
               <div class="flex justify-between items-center text-lg">
-                <span class="font-medium">Total</span>
+                <span class="font-medium">
+                  {% if is_rtl %}الإجمالي{% else %}Total{% endif %}
+                </span>
                 <span class="font-bold text-[#ECC689]">{{ cart.total_price | money }}</span>
               </div>
             </div>
@@ -265,19 +300,21 @@
               form="cart-form"
               class="w-full bg-[#ECC689] hover:bg-[#F9E2A9] text-white font-medium py-3 px-6 rounded-md transition-colors"
             >
-              Proceed to Checkout
+              {% if is_rtl %}متابعة إلى الدفع{% else %}Proceed to Checkout{% endif %}
             </button>
 
             <!-- Note -->
             <div class="mt-4">
-              <label for="cart-note" class="block text-sm font-medium text-gray-700 mb-2">Order Note (Optional)</label>
+              <label for="cart-note" class="block text-sm font-medium text-gray-700 mb-2">
+                {% if is_rtl %}ملاحظة الطلب (اختياري){% else %}Order Note (Optional){% endif %}
+              </label>
               <textarea
                 id="cart-note"
                 name="note"
                 form="cart-form"
                 rows="3"
-                class="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-2 focus:ring-[#ECC689] focus:border-transparent"
-                placeholder="Special instructions..."
+                class="w-full border border-gray-300 rounded-md p-2 text-sm focus:ring-2 focus:ring-[#ECC689] focus:border-transparent focus:outline-none"
+                placeholder="{% if is_rtl %}تعليمات خاصة...{% else %}Special instructions...{% endif %}"
               >{{ cart.note }}</textarea>
             </div>
           </div>
@@ -299,9 +336,10 @@
         button.addEventListener('click', function () {
           const line = this.dataset.line;
           const input = document.getElementById(`updates_${line}`);
-          input.value = parseInt(input.value) + 1;
-          console.log(input.value);
-          updateButton.click();
+          if (input) {
+            input.value = parseInt(input.value) + 1;
+            updateButton.click();
+          }
         });
       });
 
@@ -310,7 +348,7 @@
         button.addEventListener('click', function () {
           const line = this.dataset.line;
           const input = document.getElementById(`updates_${line}`);
-          if (parseInt(input.value) > 1) {
+          if (input && parseInt(input.value) > 1) {
             input.value = parseInt(input.value) - 1;
             updateButton.click();
           }
@@ -329,18 +367,26 @@
 
 {% else %}
   <!-- Empty Cart State -->
-  <div class="max-w-6xl mx-auto px-4 py-20">
+  <div class="max-w-6xl mx-auto px-4 py-20" dir="{% if is_rtl %}rtl{% else %}ltr{% endif %}">
     <div class="text-center">
       <div class="mb-6">
         <i class="fa-solid fa-shopping-cart text-6xl text-gray-300"></i>
       </div>
-      <h1 class="text-3xl md:text-4xl font-medium mb-4">Your Cart is Empty</h1>
-      <p class="text-gray-600 mb-8">Looks like you haven't added anything to your cart yet.</p>
+      <h1 class="text-3xl md:text-4xl font-medium mb-4">
+        {% if is_rtl %}سلة التسوق فارغة{% else %}Your Cart is Empty{% endif %}
+      </h1>
+      <p class="text-gray-600 mb-8">
+        {% if is_rtl %}
+          يبدو أنك لم تضف أي منتجات إلى سلة التسوق بعد.
+        {% else %}
+          Looks like you haven't added anything to your cart yet.
+        {% endif %}
+      </p>
       <a
         href="{{ routes.all_products_collection_url }}"
         class="inline-block bg-[#ECC689] hover:bg-[#F9E2A9] text-white font-medium px-8 py-3 rounded-md transition-colors"
       >
-        Start Shopping
+        {% if is_rtl %}ابدأ التسوق{% else %}Start Shopping{% endif %}
       </a>
     </div>
   </div>

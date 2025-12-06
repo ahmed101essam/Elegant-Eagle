@@ -1,33 +1,74 @@
-<div class="py-12">
+{% assign is_rtl = false %}
+{% if request.locale.iso_code == 'ar' %}
+  {% assign is_rtl = true %}
+{% endif %}
+
+<div class="py-12" dir="{% if is_rtl %}rtl{% else %}ltr{% endif %}">
   <div class="max-w-6xl mx-auto px-4">
     <!-- Hero Section -->
     <div
       class="h-48 md:h-96 p-2"
-      style="{% if section.settings.hero_image %}background-image: url('{{ section.settings.hero_image | image_url: width: 1920 }}'); background-size: cover; background-position: center;{% endif %}"
+      style="{% if is_rtl %}{% if section.settings.hero_image_ar %}background-image: url('{{ section.settings.hero_image_ar | image_url: width: 1920 }}');{% endif %}{% else %}{% if section.settings.hero_image_en %}background-image: url('{{ section.settings.hero_image_en | image_url: width: 1920 }}');{% endif %}{% endif %} background-size: cover; background-position: center;"
     >
       <div
-        class="h-full border-double border-6 border-[#ECC689] p-2 md:p-6 flex flex-col gap-1 md:gap-2 justify-center items-center text-center"
+        class="h-full border-double border-4 border-[#ECC689] p-2 md:p-6 flex flex-col gap-1 md:gap-2 justify-center items-center text-center"
       >
-        <h1 class="text-[#ECC689] text-3xl md:text-5xl font-medium">{{ section.settings.hero_heading }}</h1>
-        <p class="max-w-2xl text-lg md:text-xl text-white">{{ section.settings.hero_subheading }}</p>
+        <h1 class="text-[#ECC689] text-3xl md:text-5xl font-medium">
+          {% if is_rtl %}
+            {{ section.settings.hero_heading_ar }}
+          {% else %}
+            {{ section.settings.hero_heading_en }}
+          {% endif %}
+        </h1>
+        <p class="max-w-2xl text-lg md:text-xl text-white">
+          {% if is_rtl %}
+            {{ section.settings.hero_subheading_ar }}
+          {% else %}
+            {{ section.settings.hero_subheading_en }}
+          {% endif %}
+        </p>
       </div>
     </div>
 
     <!-- Our Story Section -->
     <div class="mt-16 grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-      <div class="order-2 md:order-1">
-        <h2 class="text-2xl md:text-4xl font-medium text-[#ECC689] mb-4">{{ section.settings.story_heading }}</h2>
+      <div class="order-2 md:order-{% if is_rtl %}2{% else %}1{% endif %}">
+        <h2 class="text-2xl md:text-4xl font-medium text-[#ECC689] mb-4">
+          {% if is_rtl %}
+            {{ section.settings.story_heading_ar }}
+          {% else %}
+            {{ section.settings.story_heading_en }}
+          {% endif %}
+        </h2>
         <div class="text-gray-700 leading-relaxed space-y-4">
-          {{ section.settings.story_text }}
+          {% if is_rtl %}
+            {{ section.settings.story_text_ar }}
+          {% else %}
+            {{ section.settings.story_text_en }}
+          {% endif %}
         </div>
       </div>
-      <div class="order-1 md:order-2">
-        {% if section.settings.story_image %}
-          <img
-            src="{{ section.settings.story_image | image_url: width: 800 }}"
-            alt="{{ section.settings.story_heading }}"
-            class="w-full h-96 object-cover rounded-lg shadow-lg"
-          >
+      <div class="order-1 md:order-{% if is_rtl %}1{% else %}2{% endif %}">
+        {% if is_rtl %}
+          {% if section.settings.story_image_ar %}
+            <img
+              src="{{ section.settings.story_image_ar | image_url: width: 800 }}"
+              alt="{{ section.settings.story_heading_ar }}"
+              class="w-full h-96 object-cover rounded-lg shadow-lg"
+              width="800"
+              height="384"
+            >
+          {% endif %}
+        {% else %}
+          {% if section.settings.story_image_en %}
+            <img
+              src="{{ section.settings.story_image_en | image_url: width: 800 }}"
+              alt="{{ section.settings.story_heading_en }}"
+              class="w-full h-96 object-cover rounded-lg shadow-lg"
+              width="800"
+              height="384"
+            >
+          {% endif %}
         {% endif %}
       </div>
     </div>
@@ -38,18 +79,42 @@
       <div class="bg-gray-50 p-8 rounded-lg border-2 border-[#ECC689]">
         <div class="flex items-center gap-3 mb-4">
           <i class="fa-solid fa-bullseye text-[#ECC689] text-3xl"></i>
-          <h3 class="text-2xl font-medium text-[#ECC689]">{{ section.settings.mission_heading }}</h3>
+          <h3 class="text-2xl font-medium text-[#ECC689]">
+            {% if is_rtl %}
+              {{ section.settings.mission_heading_ar }}
+            {% else %}
+              {{ section.settings.mission_heading_en }}
+            {% endif %}
+          </h3>
         </div>
-        <p class="text-gray-700 leading-relaxed">{{ section.settings.mission_text }}</p>
+        <p class="text-gray-700 leading-relaxed">
+          {% if is_rtl %}
+            {{ section.settings.mission_text_ar }}
+          {% else %}
+            {{ section.settings.mission_text_en }}
+          {% endif %}
+        </p>
       </div>
 
       <!-- Vision -->
       <div class="bg-gray-50 p-8 rounded-lg border-2 border-[#ECC689]">
         <div class="flex items-center gap-3 mb-4">
           <i class="fa-solid fa-eye text-[#ECC689] text-3xl"></i>
-          <h3 class="text-2xl font-medium text-[#ECC689]">{{ section.settings.vision_heading }}</h3>
+          <h3 class="text-2xl font-medium text-[#ECC689]">
+            {% if is_rtl %}
+              {{ section.settings.vision_heading_ar }}
+            {% else %}
+              {{ section.settings.vision_heading_en }}
+            {% endif %}
+          </h3>
         </div>
-        <p class="text-gray-700 leading-relaxed">{{ section.settings.vision_text }}</p>
+        <p class="text-gray-700 leading-relaxed">
+          {% if is_rtl %}
+            {{ section.settings.vision_text_ar }}
+          {% else %}
+            {{ section.settings.vision_text_en }}
+          {% endif %}
+        </p>
       </div>
     </div>
 
@@ -57,7 +122,11 @@
     {% if section.blocks.size > 0 %}
       <div class="mt-16">
         <h2 class="text-2xl md:text-4xl font-medium text-[#ECC689] text-center mb-12">
-          {{ section.settings.values_heading }}
+          {% if is_rtl %}
+            {{ section.settings.values_heading_ar }}
+          {% else %}
+            {{ section.settings.values_heading_en }}
+          {% endif %}
         </h2>
         <div class="grid md:grid-cols-3 gap-8">
           {% for block in section.blocks %}
@@ -65,8 +134,20 @@
               <div class="inline-flex items-center justify-center w-16 h-16 bg-[#ECC689] rounded-full mb-4">
                 <i class="{{ block.settings.icon }} text-white text-2xl"></i>
               </div>
-              <h4 class="text-xl font-medium mb-3">{{ block.settings.title }}</h4>
-              <p class="text-gray-600 leading-relaxed">{{ block.settings.description }}</p>
+              <h4 class="text-xl font-medium mb-3">
+                {% if is_rtl %}
+                  {{ block.settings.title_ar }}
+                {% else %}
+                  {{ block.settings.title_en }}
+                {% endif %}
+              </h4>
+              <p class="text-gray-600 leading-relaxed">
+                {% if is_rtl %}
+                  {{ block.settings.description_ar }}
+                {% else %}
+                  {{ block.settings.description_en }}
+                {% endif %}
+              </p>
             </div>
           {% endfor %}
         </div>
@@ -77,23 +158,43 @@
     {% if section.settings.show_team %}
       <div class="mt-16">
         <h2 class="text-2xl md:text-4xl font-medium text-[#ECC689] text-center mb-12">
-          {{ section.settings.team_heading }}
+          {% if is_rtl %}
+            {{ section.settings.team_heading_ar }}
+          {% else %}
+            {{ section.settings.team_heading_en }}
+          {% endif %}
         </h2>
         <div class="grid md:grid-cols-3 gap-8">
           {% for i in (1..3) %}
             {% assign member_image = 'team_member_' | append: i | append: '_image' %}
-            {% assign member_name = 'team_member_' | append: i | append: '_name' %}
-            {% assign member_role = 'team_member_' | append: i | append: '_role' %}
+            {% assign member_name_en = 'team_member_' | append: i | append: '_name_en' %}
+            {% assign member_name_ar = 'team_member_' | append: i | append: '_name_ar' %}
+            {% assign member_role_en = 'team_member_' | append: i | append: '_role_en' %}
+            {% assign member_role_ar = 'team_member_' | append: i | append: '_role_ar' %}
 
             {% if section.settings[member_image] %}
               <div class="text-center">
                 <img
                   src="{{ section.settings[member_image] | image_url: width: 400 }}"
-                  alt="{{ section.settings[member_name] }}"
+                  alt="{% if is_rtl %}{{ section.settings[member_name_ar] }}{% else %}{{ section.settings[member_name_en] }}{% endif %}"
                   class="w-full h-80 object-cover rounded-lg mb-4"
+                  width="400"
+                  height="320"
                 >
-                <h4 class="text-xl font-medium">{{ section.settings[member_name] }}</h4>
-                <p class="text-[#ECC689]">{{ section.settings[member_role] }}</p>
+                <h4 class="text-xl font-medium">
+                  {% if is_rtl %}
+                    {{ section.settings[member_name_ar] }}
+                  {% else %}
+                    {{ section.settings[member_name_en] }}
+                  {% endif %}
+                </h4>
+                <p class="text-[#ECC689]">
+                  {% if is_rtl %}
+                    {{ section.settings[member_role_ar] }}
+                  {% else %}
+                    {{ section.settings[member_role_en] }}
+                  {% endif %}
+                </p>
               </div>
             {% endif %}
           {% endfor %}
@@ -103,13 +204,29 @@
 
     <!-- CTA Section -->
     <div class="mt-16 bg-gradient-to-r from-[#ECC689] to-[#F9E2A9] p-8 md:p-12 rounded-lg text-center">
-      <h2 class="text-2xl md:text-4xl font-medium text-white mb-4">{{ section.settings.cta_heading }}</h2>
-      <p class="text-lg text-white mb-6 max-w-2xl mx-auto">{{ section.settings.cta_text }}</p>
+      <h2 class="text-2xl md:text-4xl font-medium text-white mb-4">
+        {% if is_rtl %}
+          {{ section.settings.cta_heading_ar }}
+        {% else %}
+          {{ section.settings.cta_heading_en }}
+        {% endif %}
+      </h2>
+      <p class="text-lg text-white mb-6 max-w-2xl mx-auto">
+        {% if is_rtl %}
+          {{ section.settings.cta_text_ar }}
+        {% else %}
+          {{ section.settings.cta_text_en }}
+        {% endif %}
+      </p>
       <a
         href="{{ section.settings.cta_link }}"
         class="inline-block bg-white text-[#ECC689] font-medium py-3 px-8 rounded-full hover:bg-gray-100 transition-colors"
       >
-        {{ section.settings.cta_button_text }}
+        {% if is_rtl %}
+          {{ section.settings.cta_button_text_ar }}
+        {% else %}
+          {{ section.settings.cta_button_text_en }}
+        {% endif %}
       </a>
     </div>
   </div>
@@ -125,20 +242,37 @@
     },
     {
       "type": "image_picker",
-      "id": "hero_image",
-      "label": "Hero Background Image"
+      "id": "hero_image_en",
+      "label": "Hero Background Image (English)"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image_ar",
+      "label": "Hero Background Image (Arabic)"
     },
     {
       "type": "text",
-      "id": "hero_heading",
-      "label": "Hero Heading",
+      "id": "hero_heading_en",
+      "label": "Hero Heading (English)",
       "default": "About Us"
     },
     {
+      "type": "text",
+      "id": "hero_heading_ar",
+      "label": "Hero Heading (Arabic)",
+      "default": "من نحن"
+    },
+    {
       "type": "textarea",
-      "id": "hero_subheading",
-      "label": "Hero Subheading",
+      "id": "hero_subheading_en",
+      "label": "Hero Subheading (English)",
       "default": "Crafting timeless elegance and sophistication since day one"
+    },
+    {
+      "type": "textarea",
+      "id": "hero_subheading_ar",
+      "label": "Hero Subheading (Arabic)",
+      "default": "نصنع الأناقة الخالدة والرقي منذ اليوم الأول"
     },
     {
       "type": "header",
@@ -146,20 +280,37 @@
     },
     {
       "type": "text",
-      "id": "story_heading",
-      "label": "Story Heading",
+      "id": "story_heading_en",
+      "label": "Story Heading (English)",
       "default": "Our Story"
     },
     {
+      "type": "text",
+      "id": "story_heading_ar",
+      "label": "Story Heading (Arabic)",
+      "default": "قصتنا"
+    },
+    {
       "type": "richtext",
-      "id": "story_text",
-      "label": "Story Text",
+      "id": "story_text_en",
+      "label": "Story Text (English)",
       "default": "<p>Founded with a passion for timeless elegance, our journey began with a simple vision: to bring luxury and sophistication to every wardrobe. What started as a small boutique has grown into a destination for those who appreciate quality craftsmanship and refined style.</p><p>Every piece in our collection is carefully selected to embody the perfect blend of classic design and contemporary flair. We believe that true style is eternal, and our commitment is to help you discover pieces that will remain cherished for years to come.</p>"
     },
     {
+      "type": "richtext",
+      "id": "story_text_ar",
+      "label": "Story Text (Arabic)",
+      "default": "<p>تأسست بشغف للأناقة الخالدة، بدأت رحلتنا برؤية بسيطة: جلب الفخامة والرقي إلى كل خزانة ملابس. ما بدأ كمتجر صغير نما ليصبح وجهة لأولئك الذين يقدرون الحرفية الجيدة والأسلوب الراقي.</p><p>كل قطعة في مجموعتنا يتم اختيارها بعناية لتجسد المزيج المثالي من التصميم الكلاسيكي واللمسة العصرية. نؤمن بأن الأناقة الحقيقية أبدية، والتزامنا هو مساعدتك في اكتشاف القطع التي ستظل عزيزة لسنوات قادمة.</p>"
+    },
+    {
       "type": "image_picker",
-      "id": "story_image",
-      "label": "Story Image"
+      "id": "story_image_en",
+      "label": "Story Image (English)"
+    },
+    {
+      "type": "image_picker",
+      "id": "story_image_ar",
+      "label": "Story Image (Arabic)"
     },
     {
       "type": "header",
@@ -167,27 +318,51 @@
     },
     {
       "type": "text",
-      "id": "mission_heading",
-      "label": "Mission Heading",
+      "id": "mission_heading_en",
+      "label": "Mission Heading (English)",
       "default": "Our Mission"
     },
     {
+      "type": "text",
+      "id": "mission_heading_ar",
+      "label": "Mission Heading (Arabic)",
+      "default": "مهمتنا"
+    },
+    {
       "type": "textarea",
-      "id": "mission_text",
-      "label": "Mission Text",
+      "id": "mission_text_en",
+      "label": "Mission Text (English)",
       "default": "To provide exceptional quality products and personalized service that elevate your style and exceed your expectations."
     },
     {
+      "type": "textarea",
+      "id": "mission_text_ar",
+      "label": "Mission Text (Arabic)",
+      "default": "تقديم منتجات عالية الجودة وخدمة شخصية ترتقي بأسلوبك وتتجاوز توقعاتك."
+    },
+    {
       "type": "text",
-      "id": "vision_heading",
-      "label": "Vision Heading",
+      "id": "vision_heading_en",
+      "label": "Vision Heading (English)",
       "default": "Our Vision"
     },
     {
+      "type": "text",
+      "id": "vision_heading_ar",
+      "label": "Vision Heading (Arabic)",
+      "default": "رؤيتنا"
+    },
+    {
       "type": "textarea",
-      "id": "vision_text",
-      "label": "Vision Text",
+      "id": "vision_text_en",
+      "label": "Vision Text (English)",
       "default": "To become the premier destination for timeless elegance, inspiring confidence and sophistication in every customer we serve."
+    },
+    {
+      "type": "textarea",
+      "id": "vision_text_ar",
+      "label": "Vision Text (Arabic)",
+      "default": "أن نصبح الوجهة الأولى للأناقة الخالدة، ملهمين الثقة والرقي في كل عميل نخدمه."
     },
     {
       "type": "header",
@@ -195,9 +370,15 @@
     },
     {
       "type": "text",
-      "id": "values_heading",
-      "label": "Values Heading",
+      "id": "values_heading_en",
+      "label": "Values Heading (English)",
       "default": "Our Values"
+    },
+    {
+      "type": "text",
+      "id": "values_heading_ar",
+      "label": "Values Heading (Arabic)",
+      "default": "قيمنا"
     },
     {
       "type": "header",
@@ -211,9 +392,15 @@
     },
     {
       "type": "text",
-      "id": "team_heading",
-      "label": "Team Heading",
+      "id": "team_heading_en",
+      "label": "Team Heading (English)",
       "default": "Meet Our Team"
+    },
+    {
+      "type": "text",
+      "id": "team_heading_ar",
+      "label": "Team Heading (Arabic)",
+      "default": "تعرف على فريقنا"
     },
     {
       "type": "image_picker",
@@ -222,13 +409,23 @@
     },
     {
       "type": "text",
-      "id": "team_member_1_name",
-      "label": "Team Member 1 - Name"
+      "id": "team_member_1_name_en",
+      "label": "Team Member 1 - Name (English)"
     },
     {
       "type": "text",
-      "id": "team_member_1_role",
-      "label": "Team Member 1 - Role"
+      "id": "team_member_1_name_ar",
+      "label": "Team Member 1 - Name (Arabic)"
+    },
+    {
+      "type": "text",
+      "id": "team_member_1_role_en",
+      "label": "Team Member 1 - Role (English)"
+    },
+    {
+      "type": "text",
+      "id": "team_member_1_role_ar",
+      "label": "Team Member 1 - Role (Arabic)"
     },
     {
       "type": "image_picker",
@@ -237,13 +434,23 @@
     },
     {
       "type": "text",
-      "id": "team_member_2_name",
-      "label": "Team Member 2 - Name"
+      "id": "team_member_2_name_en",
+      "label": "Team Member 2 - Name (English)"
     },
     {
       "type": "text",
-      "id": "team_member_2_role",
-      "label": "Team Member 2 - Role"
+      "id": "team_member_2_name_ar",
+      "label": "Team Member 2 - Name (Arabic)"
+    },
+    {
+      "type": "text",
+      "id": "team_member_2_role_en",
+      "label": "Team Member 2 - Role (English)"
+    },
+    {
+      "type": "text",
+      "id": "team_member_2_role_ar",
+      "label": "Team Member 2 - Role (Arabic)"
     },
     {
       "type": "image_picker",
@@ -252,13 +459,23 @@
     },
     {
       "type": "text",
-      "id": "team_member_3_name",
-      "label": "Team Member 3 - Name"
+      "id": "team_member_3_name_en",
+      "label": "Team Member 3 - Name (English)"
     },
     {
       "type": "text",
-      "id": "team_member_3_role",
-      "label": "Team Member 3 - Role"
+      "id": "team_member_3_name_ar",
+      "label": "Team Member 3 - Name (Arabic)"
+    },
+    {
+      "type": "text",
+      "id": "team_member_3_role_en",
+      "label": "Team Member 3 - Role (English)"
+    },
+    {
+      "type": "text",
+      "id": "team_member_3_role_ar",
+      "label": "Team Member 3 - Role (Arabic)"
     },
     {
       "type": "header",
@@ -266,21 +483,39 @@
     },
     {
       "type": "text",
-      "id": "cta_heading",
-      "label": "CTA Heading",
+      "id": "cta_heading_en",
+      "label": "CTA Heading (English)",
       "default": "Ready to Elevate Your Style?"
     },
     {
+      "type": "text",
+      "id": "cta_heading_ar",
+      "label": "CTA Heading (Arabic)",
+      "default": "هل أنت مستعد لرفع مستوى أسلوبك؟"
+    },
+    {
       "type": "textarea",
-      "id": "cta_text",
-      "label": "CTA Text",
+      "id": "cta_text_en",
+      "label": "CTA Text (English)",
       "default": "Discover our curated collection of timeless pieces designed to make you look and feel your best."
     },
     {
+      "type": "textarea",
+      "id": "cta_text_ar",
+      "label": "CTA Text (Arabic)",
+      "default": "اكتشف مجموعتنا المنتقاة من القطع الخالدة المصممة لتجعلك تبدو وتشعر بأفضل حال."
+    },
+    {
       "type": "text",
-      "id": "cta_button_text",
-      "label": "CTA Button Text",
+      "id": "cta_button_text_en",
+      "label": "CTA Button Text (English)",
       "default": "Shop Now"
+    },
+    {
+      "type": "text",
+      "id": "cta_button_text_ar",
+      "label": "CTA Button Text (Arabic)",
+      "default": "تسوق الآن"
     },
     {
       "type": "url",
@@ -303,15 +538,27 @@
         },
         {
           "type": "text",
-          "id": "title",
-          "label": "Title",
+          "id": "title_en",
+          "label": "Title (English)",
           "default": "Quality"
         },
         {
+          "type": "text",
+          "id": "title_ar",
+          "label": "Title (Arabic)",
+          "default": "الجودة"
+        },
+        {
           "type": "textarea",
-          "id": "description",
-          "label": "Description",
+          "id": "description_en",
+          "label": "Description (English)",
           "default": "We never compromise on quality, ensuring every piece meets our high standards."
+        },
+        {
+          "type": "textarea",
+          "id": "description_ar",
+          "label": "Description (Arabic)",
+          "default": "نحن لا نساوم أبداً على الجودة، مما يضمن أن كل قطعة تلبي معاييرنا العالية."
         }
       ]
     }
@@ -324,24 +571,30 @@
           "type": "value",
           "settings": {
             "icon": "fa-solid fa-gem",
-            "title": "Quality",
-            "description": "We never compromise on quality, ensuring every piece meets our high standards of excellence."
+            "title_en": "Quality",
+            "title_ar": "الجودة",
+            "description_en": "We never compromise on quality, ensuring every piece meets our high standards of excellence.",
+            "description_ar": "نحن لا نساوم أبداً على الجودة، مما يضمن أن كل قطعة تلبي معاييرنا العالية من التميز."
           }
         },
         {
           "type": "value",
           "settings": {
             "icon": "fa-solid fa-heart",
-            "title": "Passion",
-            "description": "Our love for timeless style drives everything we do, from curation to customer service."
+            "title_en": "Passion",
+            "title_ar": "الشغف",
+            "description_en": "Our love for timeless style drives everything we do, from curation to customer service.",
+            "description_ar": "حبنا للأسلوب الخالد يحرك كل ما نفعله، من الاختيار إلى خدمة العملاء."
           }
         },
         {
           "type": "value",
           "settings": {
             "icon": "fa-solid fa-users",
-            "title": "Community",
-            "description": "Building lasting relationships with our customers is at the heart of our business."
+            "title_en": "Community",
+            "title_ar": "المجتمع",
+            "description_en": "Building lasting relationships with our customers is at the heart of our business.",
+            "description_ar": "بناء علاقات دائمة مع عملائنا هو جوهر عملنا."
           }
         }
       ]
